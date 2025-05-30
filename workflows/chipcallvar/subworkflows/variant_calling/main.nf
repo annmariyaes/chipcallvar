@@ -1,11 +1,12 @@
-include { MACS3_CALLVAR } from '../../../../modules/local/macs3/callvar'
-
-
 /*
 =============================================================================
     SUBWORKFLOW: Variant Calling
 =============================================================================
 */
+
+
+include { MACS3_CALLVAR } from '../../../../modules/local/macs3/callvar'
+
 
 workflow VARIANT_CALLING {
     take:

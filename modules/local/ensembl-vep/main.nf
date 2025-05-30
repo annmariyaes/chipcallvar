@@ -1,3 +1,9 @@
+/*
+=============================================================================
+        MODULE: VEP
+=============================================================================
+*/
+
 process ENSEMBL_VEP {
     tag "${meta.sample}"
     publishDir "${params.OUTDIR}/annotation/ensembl-vep/${meta.sample}", mode: 'symlink'

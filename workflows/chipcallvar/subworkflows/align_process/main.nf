@@ -16,13 +16,12 @@ workflow ALIGN_AND_PROCESS {
     ch_index     // channel: bwa-mem2 index files
 
     main:
-    // Alignment
-    ch_bam = BWAMEM2_MEM(ch_input, ch_index)
+    ch_combined = ch_input.combine(ch_index)
+    // ch_combined.view()
+    ch_bam = BWAMEM2_MEM(ch_combined)
 
-    // Process SAM files and get bam & bai files
     ch_map = SAMTOOLS_MAP(ch_bam.sam)
-
-    // Group by sample for technical replicates
+    // ch_map.view()
     ch_grouped = ch_map.map { meta, bam, bai ->
                     tuple(meta.sample, meta, bam, bai)
         }
@@ -33,7 +32,7 @@ workflow ALIGN_AND_PROCESS {
                 merged_meta.id = sample
                 tuple(merged_meta, bams, bais)
         }
-    ch_grouped.view()
+        .view()
 
     // Merge technical replicates
     ch_merge = SAMTOOLS_MERGE(ch_grouped)

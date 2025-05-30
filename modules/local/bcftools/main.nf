@@ -1,3 +1,9 @@
+/*
+=============================================================================
+        MODULE: BCFTOOLS view, reheader
+=============================================================================
+*/
+
 
 // t_ref_count and t_alt_count columns are typically derived from INFO or FORMAT fields that contain read depth (AD, DP, or SB).
 

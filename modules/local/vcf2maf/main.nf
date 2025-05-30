@@ -1,6 +1,11 @@
-// chipcallvar/modules/nf-core/vcf2maf/main.nf
+/*
+=============================================================================
+        MODULE: VCF2MAF
+=============================================================================
+*/
 
 process VCF2MAF {
+
     tag "${meta.sample}"
     publishDir "${params.OUTDIR}/mafs_annotated/${meta.sample}", mode: 'copy'
 

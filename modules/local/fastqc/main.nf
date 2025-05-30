@@ -1,4 +1,11 @@
+/*
+=============================================================================
+        MODULE: FASTQC
+=============================================================================
+*/
+
 process FASTQC {
+
     tag "${meta.id}"
     label 'process_medium'
     publishDir "${params.OUTDIR}/fastqc", mode: 'copy'

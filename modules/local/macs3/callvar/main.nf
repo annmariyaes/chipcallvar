@@ -12,8 +12,8 @@ process MACS3_CALLVAR {
     tuple val(meta), path("${meta.sample}_peaks.vcf"), emit: vcf
 
     script:
-    def ctrl_flag = ctrl_bams ? "-c ${ctrl_bams}" : "" 
-   
+    def ctrl_flag = ctrl_bams ? "--control $ctrl_bams" : ''   
+
     """
     macs3 callvar \
         -b ${peaks} \
