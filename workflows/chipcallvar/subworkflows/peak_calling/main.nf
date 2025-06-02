@@ -33,4 +33,5 @@ workflow PEAK_CALLING {
     
     emit:
     peaks = callpeak.peaks  // [ meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais ]
+    stats = callpeak.peak_stats
 }

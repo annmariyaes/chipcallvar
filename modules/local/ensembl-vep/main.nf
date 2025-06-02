@@ -29,6 +29,7 @@ process ENSEMBL_VEP {
         --check_existing \
         --vcf \
         --fork ${task.cpus} \
-        --buffer_size 10000 
+        --buffer_size 10000 \
+        --stats_file ${meta.patient}.variant_effect_output.txt_summary.html
     """
 }

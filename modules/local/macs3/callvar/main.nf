@@ -21,7 +21,6 @@ process MACS3_CALLVAR {
         ${ctrl_flag} \
         --multiple-processing ${task.cpus} \
         --outdir . \
-        --ofile ${meta.patient}_peaks.vcf \
-        --verbose
+        --ofile ${meta.patient}_peaks.vcf 
     """
 }
