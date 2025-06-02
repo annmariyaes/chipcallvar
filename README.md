@@ -18,9 +18,9 @@ This pipeline performs the following steps:
 <img width="1340" alt="workflow" src="https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74" />
 
 
-# Usage
+## Usage
 
-## 📂 Input: Sample Sheet
+### 📂 Input: Sample Sheet
 
 Each row represents a pair of fastq files (paired end). Prepare a CSV file (`samplesheet.csv`) with the following format:
 
@@ -31,8 +31,16 @@ OCI-AML3,OCI-AML3_H3K27ac,1,ChIP_OCI-AML3_rep1_H3K27ac_R1_001.fastq.gz,ChIP_OCI-
 OCI-AML3,OCI-AML3_H3K27ac,2,ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,ChIP_OCI-AML3_rep2_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
 ```
 
+### ⚙️ Parameters File (params.yaml)
+```yaml
+OUTDIR: "./nf-macs3"
+email: 'example@gmail.com'
+GENOME: 'WholeGenomeFasta/genome.fa'
+GENOME_SIZE: "hs"
+SAMPLESHEET: "./samplesheet_example.csv"
+```
 
-## 🚀 Running the Pipeline
+### 🚀 Running the Pipeline
 
 ```bash
 nextflow run main.nf \
@@ -40,9 +48,9 @@ nextflow run main.nf \
    -resume
 ```
 
-Adjust the `-profile` to match your environment (e.g., `singularity`, `conda`, or institutional profile).
-
 
 ## 👩‍💻 Author
 
-Annmariya 
+Ann Mariya
+[GitHub](https://github.com/annmariyaes)
+[Email](annmariya.elayani@gmail.com)
