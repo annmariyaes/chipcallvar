@@ -21,21 +21,14 @@ workflow PEAK_CALLING {
     // Treatment samples (ChIP samples)
     ch_treatment = ch_bam
         .filter { meta, bam, bai -> meta.control && meta.control != "" }
-        .map { meta, bam, bai -> [meta.control, meta, bam, bai] }
-    ch_treatment.view { "Treatment sample: $it" }
+        .map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
 
-    ch_control_by_patient = ch_control.map { meta, bam, bai -> tuple(meta.patient, bam, bai) }
-    ch_treatment_by_patient = ch_treatment.map { meta, bam, bai -> tuple(meta.patient, meta, bam, bai) }
-    
-    ch_matched = ch_treatment_by_patient
-        .join(ch_control_by_patient)
-        .map { patient, treat_meta, treat_bam, treat_bai, ctrl_bam, ctrl_bai ->
-            // Return the structure expected by MACS3_CALLPEAK
+    ch_matched = ch_treatment
+        .join(ch_control) // join by patient
+        .map { key, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai  ->
             [treat_meta, treat_bam, treat_bai, ctrl_bam, ctrl_bai]
-        }
-    ch_matched.map { it -> it.join('\n') + '\n---' }.view()
-    
-    // Call MACS3_CALLPEAK with properly structured channel
+        }    
+    // ch_matched.view { "Matched channel: $it" }
     callpeak = MACS3_CALLPEAK(ch_matched)
     
     emit:

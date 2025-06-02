@@ -5,32 +5,33 @@
 */
 
 process SAMTOOLS_MERGE {
-
     tag "${meta.sample}"
     publishDir "${params.OUTDIR}/preprocessing/merged/${meta.sample}", mode: 'copy'
     container "${params.SAMTOOLS_CONTAINER}"
-
+    
     input:
-    tuple val(meta), path(bam), path(bai)
-
+    tuple val(meta), path(bams), path(bais)
+    
     output:
     tuple val(meta), path("${meta.sample}.bam"), path("${meta.sample}.bam.bai"), emit: merged
-
+    
     script:
-    def bams = bam.join(' ')
+    def bam_count = bams instanceof List ? bams.size() : 1
+    def bam_files = bams instanceof List ? bams.join(' ') : bams.toString()
+
     """
-    echo "Processing BAMs: ${bams}"
-    # Merge the technical replicates bam files
-    samtools merge -o "${meta.sample}.merged.bam" ${bams}
+    if [ ${bam_count} -eq 1 ]; then
+        # Single BAM: direct sort (skip merge step)
+        # echo "Single BAM files: ${bams}"
+        samtools sort -o "${meta.sample}.bam" $bams
+    else
+        # Multiple BAMs: merge then sort
+        # echo "Multiple BAM files: ${bams}"
+        samtools merge -f -o "${meta.sample}.merged.bam" $bams
+        samtools sort -o "${meta.sample}.bam" "${meta.sample}.merged.bam"
+        rm "${meta.sample}.merged.bam"
+    fi
 
-    # Sort the BAM file
-    samtools sort "${meta.sample}.merged.bam" -o "${meta.sample}.merged.sorted.bam"
-
-    # Index the sorted BAM file
-    samtools index "${meta.sample}.merged.sorted.bam"
-
-    # Rename sorted BAM as final output
-    mv "${meta.sample}.merged.sorted.bam" "${meta.sample}.bam"
-    mv "${meta.sample}.merged.sorted.bam.bai" "${meta.sample}.bam.bai"
+    samtools index "${meta.sample}.bam"
     """
 }

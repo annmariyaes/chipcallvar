@@ -5,9 +5,7 @@
 */
 
 process BWAMEM2_INDEX {
-
     tag { new File(params.REFERENCE_GENOME).getName() }
-    publishDir "${params.OUTDIR}/reference", mode: 'copy'    
     container "${params.BWAMEM2_CONTAINER}"    
     
     input:

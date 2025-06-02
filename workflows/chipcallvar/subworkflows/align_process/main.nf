@@ -17,23 +17,19 @@ workflow ALIGN_AND_PROCESS {
 
     main:
     ch_combined = ch_input.combine(ch_index)
-    // ch_combined.view()
     ch_bam = BWAMEM2_MEM(ch_combined)
 
     ch_map = SAMTOOLS_MAP(ch_bam.sam)
-    // ch_map.view()
-    ch_grouped = ch_map.map { meta, bam, bai ->
-                    tuple(meta.sample, meta, bam, bai)
-        }
+
+    // Simple grouping by sample
+    ch_grouped = ch_map
+        .map { meta, bam, bai -> tuple(meta.sample, meta, bam, bai) }
         .groupTuple()
         .map { sample, metas, bams, bais ->
-                // Create new meta with sample name and combine all files
-                def merged_meta = metas[0].clone()
-                merged_meta.id = sample
-                tuple(merged_meta, bams, bais)
-        }
-        .view()
-
+            def merged_meta = metas[0].clone()
+            merged_meta.id = sample
+            tuple(merged_meta, bams, bais)
+        }        
     // Merge technical replicates
     ch_merge = SAMTOOLS_MERGE(ch_grouped)
 

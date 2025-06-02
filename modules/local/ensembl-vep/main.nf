@@ -5,22 +5,22 @@
 */
 
 process ENSEMBL_VEP {
-    tag "${meta.sample}"
-    publishDir "${params.OUTDIR}/annotation/ensembl-vep/${meta.sample}", mode: 'symlink'
+    tag "${meta.patient}"
+    publishDir "${params.OUTDIR}/annotation/ensembl-vep/${meta.patient}", mode: 'symlink'
     container "${params.VEP_CONTAINER}" 
 
     input:
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("${meta.sample}_vep_ann.vcf"), emit: vcf
+    tuple val(meta), path("${meta.patient}_vep_ann.vcf"), emit: vcf
 
     script:
     """
     # Run VEP with optimized parameters
     vep \
         -i ${vcf} \
-        -o ${meta.sample}_vep_ann.vcf \
+        -o ${meta.patient}_vep_ann.vcf \
         --cache \
         --dir_cache ${params.VEP_CACHE} \
         --fasta ${params.REFERENCE_FASTA} \
