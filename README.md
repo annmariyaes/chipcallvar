@@ -1,6 +1,6 @@
 # chipcallvar
 
-**chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow for variant calling on ChIP-seq data.
+**chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow to call variants (SNVs and INDELs) on ChIP-seq data primarily taking advantage of `macs3 callvar` variant caller.
 
 
 ## 🧬 Workflow Overview
