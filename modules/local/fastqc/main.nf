@@ -5,9 +5,7 @@
 */
 
 process FASTQC {
-
     tag "${meta.id}"
-    label 'process_medium'
     publishDir "${params.OUTDIR}/fastqc", mode: 'copy'
     container "${params.FASTQC_CONTAINER}"
     

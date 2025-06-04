@@ -29,5 +29,5 @@ workflow VCF_STATS {
     BCFTOOLS_STATS(ch_vep)
     
     emit:
-    bam_stats = BCFTOOLS_STATS.out.vcf_stats
+    vcf_stats = BCFTOOLS_STATS.out.vcf_stats
 }

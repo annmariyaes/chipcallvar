@@ -17,5 +17,5 @@ workflow VARIANT_ANNOTATION {
     
     emit:
     vcf = vep.vcf  // [ meta, annotated_vcf ]
-    // vep_stats = vep.vep_stats
+    vep_stats = vep.vep_stats
 }

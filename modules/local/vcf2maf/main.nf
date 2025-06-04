@@ -18,12 +18,12 @@ process VCF2MAF {
     """
     # Uncompress the vcf file
     bgzip -c -d ${vcf} > ${meta.patient}.vcf
- 
+
     perl /storage/tools/vcf2maf_v1.6.22/mskcc-vcf2maf-f6d0c40/vcf2maf.pl \
-        --input-vcf ${meta.patient}.vcf \
+        --input-vcf ${vcf} \
         --output-maf ${meta.patient}.macs3.vep.maf \
         --tumor-id ${meta.patient} \
-        --ref-fasta ${params.REFERENCE_FASTA} \
+        --ref-fasta ${params.REFERENCE_GENOME} \
         --vep-data ${params.VEP_CACHE} \
         --vep-path ${params.VEP_PATH} \
         --ncbi-build GRCh38 \

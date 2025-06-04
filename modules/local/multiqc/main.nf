@@ -1,25 +1,22 @@
+
 process MULTIQC {
-    publishDir "${params.outdir}/multiqc", mode: 'copy'
-    container 'ewels/multiqc'
-
+    publishDir "${params.OUTDIR}/multiqc", mode: 'copy'
+    container "${params.MULTIQC_CONTAINER}"
+    
     input:
-    path fastqc_reports
-    path samtools_stats
-    path bcftools_stats
-    path vep_stats
-
+    path('fastqc/*')
+    path('samtools/*')
+    path('bcftools/*') 
+    path('vep/*')
+    
     output:
-    path("multiqc_report.html")
-    path("multiqc_data")
-
+    path "multiqc_report.html", emit: html
+    
     script:
     """
-    mkdir multiqc_input
-    cp $fastqc_reports multiqc_input/
-    cp $samtools_stats multiqc_input/
-    cp $bcftools_stats multiqc_input/
-    cp $vep_stats multiqc_input/
-
-    multiqc multiqc_input
+    multiqc . \\
+        --filename multiqc_report.html \\
+        --force \\
+        --verbose
     """
 }

@@ -67,3 +67,17 @@ println """
 \033[1;34m=============================================================================================================================\033[0m
 """
 
+// Display pipeline execution summary upon completion
+workflow.onComplete {
+    def BOLD_GREEN = "\u001B[1;32m"
+    def RESET = "\u001B[0m"
+
+    def msg = """\
+
+        ✅ Completed at : ${workflow.complete}
+        ⏳ Duration : ${workflow.duration}
+        """
+        .stripIndent()
+
+    println("${BOLD_GREEN}${msg}${RESET}")
+}

@@ -14,8 +14,7 @@ process ENSEMBL_VEP {
 
     output:
     tuple val(meta), path("${meta.patient}.macs3.vep.vcf"), emit: vcf
-    path("${meta.patient}.vep.summary.html"), emit: vcf_stats
-
+    tuple val(meta), path("${meta.patient}.vep.summary.html"), emit: vep_stats
     
     script:
     """

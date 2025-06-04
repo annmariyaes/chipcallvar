@@ -12,7 +12,7 @@ process BCFTOOLS_STATS {
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("${meta.patient}.vcf.stats.txt"), path("outdir"), emit: vcf_stats
+    tuple val(meta), path("${meta.patient}.vcf.stats.txt"), emit: vcf_stats
 
     script:
     """
