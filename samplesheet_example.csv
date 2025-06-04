@@ -1,4 +1,0 @@
-patient,sample,replicate,fastq_1,fastq_2,control,control_replicate
-OCI-AML3,OCI-AML3_input,1,/20241210_hs_ChIP_OCI-AML3_rep1_Input_60PE_JB_S13_R1_001.fastq.gz,/20241210_hs_ChIP_OCI-AML3_rep1_Input_60PE_JB_S13_R2_001.fastq.gz,,
-OCI-AML3,OCI-AML3_H3K27ac,1,/20241210_hs_ChIP_OCI-AML3_rep1_H3K27ac_60PE_JB_S9_R1_001.fastq.gz,/20241210_hs_ChIP_OCI-AML3_rep1_H3K27ac_60PE_JB_S9_R2_001.fastq.gz,OCI-AML3_input,1
-OCI-AML3,OCI-AML3_H3K27ac,2,/20241210_hs_ChIP_OCI-AML3_rep2_H3K27ac_60PE_JB_S10_R1_001.fastq.gz,/20241210_hs_ChIP_OCI-AML3_rep2_H3K27ac_60PE_JB_S10_R2_001.fastq.gz,OCI-AML3_input,1

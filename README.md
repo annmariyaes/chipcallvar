@@ -13,7 +13,7 @@ This pipeline performs the following steps:
 4. **Variant calling** – `macs3 callvar`
 5. **Variant annotation** – Ensembl `vep`
 6. **Variant filtering** – `bcftools`, `vcf2maf`
-7. **MultiQC** - `fastqc`, `samtools flagstat & stats`, `mosdepth`, `bcftools stats`, `vep stats`
+7. **MultiQC** - `fastqc`, `samtools flagstat & stats`, `bcftools stats`, `vep stats`
 
 <img width="1340" alt="workflow" src="https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74" />
 
@@ -26,9 +26,9 @@ Each row represents a pair of fastq files (paired end). Prepare a CSV file (`sam
 
 ```csv
 patient,sample,replicate,fastq_1,fastq_2,control,control_replicate
-OCI-AML3,OCI-AML3_input,1,ChIP_OCI-AML3_rep1_Input_R1_001.fastq.gz, ChIP_OCI-AML3_rep1_Input_R2_001.fastq.gz,,
-OCI-AML3,OCI-AML3_H3K27ac,1,ChIP_OCI-AML3_rep1_H3K27ac_R1_001.fastq.gz,ChIP_OCI-AML3_rep1_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
-OCI-AML3,OCI-AML3_H3K27ac,2,ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,ChIP_OCI-AML3_rep2_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
+OCI-AML3,OCI-AML3_input,1,test/hs_ChIP_OCI-AML3_rep1_Input_R1_001.fastq.gztest/hs_ChIP_OCI-AML3_rep1_Input_R2_001.fastq.gz,,
+OCI-AML3,OCI-AML3_H3K27ac,1,test/hs_ChIP_OCI-AML3_rep1_H3K27ac_R1_001.fastq.gz,test/hs_ChIP_OCI-AML3_rep1_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
+OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
 ```
 
 ### ⚙️ Parameters File (params.yaml)
