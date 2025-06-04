@@ -9,15 +9,15 @@ When converting a VCF to a MAF file, the t_ref_count and t_alt_count columns are
 */
 
 process BCFTOOLS {
-    tag "$meta.id"
-    publishDir "${params.OUTDIR}/vep_annotated/${meta.id}", mode: 'copy'
+    tag "$meta.patient"
+    publishDir "${params.OUTDIR}/annotation/ensembl_vep/${meta.patient}", mode: 'copy'
 
     input:
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("${meta.id}.filled.vcf.gz"), emit: vcf
-    tuple val(meta), path("${meta.id}.filled.vcf.gz.tbi"), emit: vcf_tbi
+    tuple val(meta), path("${meta.patient}.filled.vcf.gz"), emit: vcf
+    tuple val(meta), path("${meta.patient}.filled.vcf.gz.tbi"), emit: vcf_tbi
 
     script:
     """
@@ -31,26 +31,26 @@ process BCFTOOLS {
         
     # Create a sample rename mapping file
     SAMPLE=\$(bcftools query -l $vcf)
-    sed -i "s/\tSAMPLE\$/\t$meta.id/" header.txt
+    sed -i "s/\tSAMPLE\$/\t$meta.patient/" header.txt
  
     # Reheader the VCF with the updated header and new sample name
-    bcftools reheader -h header.txt -o ${meta.id}_reheader.vcf $vcf
+    bcftools reheader -h header.txt -o ${meta.patient}_reheader.vcf $vcf
     
     # Move INFO/SB to FORMAT/SB
-    bcftools query -f '%CHROM\\t%POS\\t%REF\\t%ALT\\t%INFO/SB\\n' ${meta.id}_reheader.vcf | awk '
+    bcftools query -f '%CHROM\\t%POS\\t%REF\\t%ALT\\t%INFO/SB\\n' ${meta.patient}_reheader.vcf | awk '
     BEGIN { OFS="\t" }
     {
     	if (\$5 != "." && split(\$5, sb, ",") == 4) {
         	print \$1, \$2, \$3, \$4, sb[1] "," sb[2] "," sb[3] "," sb[4];
     	}
-    }' > ${meta.id}_SB_values.txt
+    }' > ${meta.patient}_SB_values.txt
     
     # Compress and index SB file
-    bgzip ${meta.id}_SB_values.txt
-    tabix -s1 -b2 -e2 ${meta.id}_SB_values.txt.gz
+    bgzip ${meta.patient}_SB_values.txt
+    tabix -s1 -b2 -e2 ${meta.patient}_SB_values.txt.gz
  
     # Extract AD from SB and save to a temporary file
-    bcftools query -f '%CHROM\\t%POS\\t%REF\\t%ALT\\t%INFO/SB\\n' ${meta.id}_reheader.vcf | awk '
+    bcftools query -f '%CHROM\\t%POS\\t%REF\\t%ALT\\t%INFO/SB\\n' ${meta.patient}_reheader.vcf | awk '
     BEGIN { OFS="\\t" }
     {
         if (\$5 != "." && split(\$5, sb, ",") == 4) {
@@ -58,21 +58,21 @@ process BCFTOOLS {
             alt_count = sb[3] + sb[4];  # Sum of alternate allele reads
             print \$1, \$2, \$3, \$4, ref_count "," alt_count;
         }
-    }' > ${meta.id}_AD_values.txt
+    }' > ${meta.patient}_AD_values.txt
     
     # Compress and index AD file
-    bgzip ${meta.id}_AD_values.txt
-    tabix -s1 -b2 -e2 ${meta.id}_AD_values.txt.gz
+    bgzip ${meta.patient}_AD_values.txt
+    tabix -s1 -b2 -e2 ${meta.patient}_AD_values.txt.gz
 
     # Annotate VCF with AD, SB fields
-    bcftools annotate -a ${meta.id}_AD_values.txt.gz -c CHROM,POS,REF,ALT,FORMAT/AD -o ${meta.id}_with_ad.vcf ${meta.id}_reheader.vcf
-    bcftools annotate -a ${meta.id}_SB_values.txt.gz -c CHROM,POS,REF,ALT,FORMAT/SB -o ${meta.id}_with_sb.vcf ${meta.id}_with_ad.vcf
+    bcftools annotate -a ${meta.patient}_AD_values.txt.gz -c CHROM,POS,REF,ALT,FORMAT/AD -o ${meta.patient}_with_ad.vcf ${meta.patient}_reheader.vcf
+    bcftools annotate -a ${meta.patient}_SB_values.txt.gz -c CHROM,POS,REF,ALT,FORMAT/SB -o ${meta.patient}_with_sb.vcf ${meta.patient}_with_ad.vcf
 
     # Create FORMAT/VAF from FORMAT/AD
-    bcftools +fill-tags ${meta.id}_with_sb.vcf -Oz -o ${meta.id}.filled.vcf.gz -- -t FORMAT/VAF
-    tabix -p vcf "${meta.id}.filled.vcf.gz"
+    bcftools +fill-tags ${meta.patient}_with_sb.vcf -Oz -o ${meta.patient}.filled.vcf.gz -- -t FORMAT/VAF
+    tabix -p vcf "${meta.patient}.filled.vcf.gz"
 
     # Cleanup
-    rm header.txt ${meta.id}_AD_values.txt.gz ${meta.id}_AD_values.txt.gz.tbi ${meta.id}_SB_values.txt.gz ${meta.id}_SB_values.txt.gz.tbi ${meta.id}_reheader.vcf ${meta.id}_with_ad.vcf
+    rm header.txt ${meta.patient}_AD_values.txt.gz ${meta.patient}_AD_values.txt.gz.tbi ${meta.patient}_SB_values.txt.gz ${meta.patient}_SB_values.txt.gz.tbi ${meta.patient}_reheader.vcf ${meta.patient}_with_ad.vcf
    """
 }

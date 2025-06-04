@@ -1,6 +1,7 @@
 # Ignore macOS system files
 .DS_Store
 Icon?
+*.csv
 
 # Ignore Nextflow work directory (where intermediate files are stored)
 work/
