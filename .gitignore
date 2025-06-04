@@ -1,3 +1,11 @@
-test/
+# Ignore macOS system files
 .DS_Store
 Icon?
+
+# Ignore Nextflow work directory (where intermediate files are stored)
+work/
+
+# Ignore folders like fastq files, genome index file 
+test/
+test_subsampled/
+reference/
