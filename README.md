@@ -1,19 +1,19 @@
 # chipcallvar
 
-**chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow to call variants (SNVs and INDELs) on ChIP-seq data primarily taking advantage of `macs3 callvar` variant caller.
+**chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow to call variants (SNVs and INDELs) on ChIP-seq data primarily taking advantage of [macs3 callvar](https://macs3-project.github.io/MACS/docs/callvar.html)  variant caller.
 
 
 ## 🧬 Workflow Overview
 
 This pipeline performs the following steps:
 
-1. **Sequencing quality control** – FastQC  
-2. **Read mapping** – `bwa-mem2`
-3. **Merging technical duplicates** – `samtools`
-4. **Peak calling** – MACS3 [callpeak](https://macs3-project.github.io/MACS/docs/callpeak.html)  
-5. **Variant calling** – MACS3 [callvar](https://macs3-project.github.io/MACS/docs/callvar.html)  
-6. **Variant annotation** – Ensembl `vep`
-7. **Variant filtering** – BCFtools, VCF2MAF
+1. **Read mapping** – `bwa-mem2`
+2. **Merging technical duplicates** – `samtools`
+3. **Peak calling** – `macs3 callpeak`
+4. **Variant calling** – `macs3 callvar`
+5. **Variant annotation** – Ensembl `vep`
+6. **Variant filtering** – `bcftools`, `vcf2maf`
+7. **MultiQC** - `fastqc`, `samtools flagstat, stats`, `mosdepth`, `bcftools stats`  
 
 <img width="1340" alt="workflow" src="https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74" />
 
