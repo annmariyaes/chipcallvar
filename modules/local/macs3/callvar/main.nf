@@ -9,7 +9,7 @@ process MACS3_CALLVAR {
     tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
     
     output:
-    tuple val(meta), path("${meta.patient}_peaks.vcf"), emit: vcf
+    tuple val(meta), path("${meta.patient}.macs3.vcf"), emit: vcf
 
     script:
     def ctrl_flag = ctrl_bams ? "--control $ctrl_bams" : ''   
@@ -21,6 +21,6 @@ process MACS3_CALLVAR {
         ${ctrl_flag} \
         --multiple-processing ${task.cpus} \
         --outdir . \
-        --ofile ${meta.patient}_peaks.vcf 
+        --ofile ${meta.patient}.macs3.vcf 
     """
 }

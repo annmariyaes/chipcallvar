@@ -12,11 +12,11 @@ process BCFTOOLS_STATS {
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("${meta.patient}_vcf_stats.txt"), path("outdir"), emit: vcf_stats
+    tuple val(meta), path("${meta.patient}.vcf.stats.txt"), path("outdir"), emit: vcf_stats
 
     script:
     """
     # Run bcftools stats for MultiQC
-    bcftools stats $vcf > "${meta.patient}_vcf_stats.txt"
+    bcftools stats $vcf > "${meta.patient}.vcf.stats.txt"
     """
 }

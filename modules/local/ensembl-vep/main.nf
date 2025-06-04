@@ -13,8 +13,8 @@ process ENSEMBL_VEP {
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("${meta.patient}_vep_ann.vcf"), emit: vcf
-    path("${meta.patient}_vep_summary.html"), emit: vcf_stats
+    tuple val(meta), path("${meta.patient}.macs3.vep.vcf"), emit: vcf
+    path("${meta.patient}.vep.summary.html"), emit: vcf_stats
 
     
     script:
@@ -22,7 +22,7 @@ process ENSEMBL_VEP {
     # Run VEP with optimized parameters
     vep \
         -i ${vcf} \
-        -o ${meta.patient}_vep_ann.vcf \
+        -o ${meta.patient}.macs3.vep.vcf \
         --cache \
         --dir_cache ${params.VEP_CACHE} \
         --everything \
@@ -30,6 +30,6 @@ process ENSEMBL_VEP {
         --vcf \
         --fork ${task.cpus} \
         --buffer_size 10000 \
-        --stats_file ${meta.patient}_vep_summary.html  
+        --stats_file ${meta.patient}.vep.summary.html  
     """
 }

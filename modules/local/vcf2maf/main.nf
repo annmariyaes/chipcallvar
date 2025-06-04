@@ -12,7 +12,7 @@ process VCF2MAF {
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("${meta.patient}_vep_ann.maf.gz"), emit: maf
+    tuple val(meta), path("${meta.patient}.macs3.vep.maf.gz"), emit: maf
 
     script:
     """
@@ -21,7 +21,7 @@ process VCF2MAF {
  
     perl /storage/tools/vcf2maf_v1.6.22/mskcc-vcf2maf-f6d0c40/vcf2maf.pl \
         --input-vcf ${meta.patient}.vcf \
-        --output-maf ${meta.patient}_vep_ann.maf \
+        --output-maf ${meta.patient}.macs3.vep.maf \
         --tumor-id ${meta.patient} \
         --ref-fasta ${params.REFERENCE_FASTA} \
         --vep-data ${params.VEP_CACHE} \
@@ -30,6 +30,6 @@ process VCF2MAF {
         --inhibit-vep  # Use this if VEP has already been run
 
     # Use pigz for parallel gzip compression
-    pigz -p ${task.cpus} ${meta.patient}_vep_ann.maf || gzip ${meta.patient}_vep_ann.maf
+    pigz -p ${task.cpus} ${meta.patient}.macs3.vep.maf || gzip ${meta.patient}.macs3.vep.maf
     """
 }
