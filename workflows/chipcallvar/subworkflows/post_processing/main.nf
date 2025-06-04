@@ -4,7 +4,7 @@
 =============================================================================
 */
 
-include { BCFTOOLS } from '../../../../modules/local/bcftools'
+include { BCFTOOLS } from '../../../../modules/local/bcftools/reheader'
 include { VCF2MAF } from '../../../../modules/local/vcf2maf'
 
 

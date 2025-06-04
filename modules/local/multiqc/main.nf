@@ -1,28 +1,25 @@
 process MULTIQC {
-    label 'process_single'
-
-    publishDir "${params.OUTDIR}/multiqc", mode: 'copy'
-    container "${params.MULTIQC_CONTAINER}"
+    publishDir "${params.outdir}/multiqc", mode: 'copy'
+    container 'ewels/multiqc'
 
     input:
-    path(reports)
+    path fastqc_reports
+    path samtools_stats
+    path bcftools_stats
+    path vep_stats
 
     output:
-    path "multiqc_report.html", emit: report
-    path "multiqc_data",        emit: data
-    path "versions.yml",        emit: versions
+    path("multiqc_report.html")
+    path("multiqc_data")
 
     script:
-    def args = task.ext.args ?: ''
-    def reportFiles = reports.collect { it.toString() }.join(' ')
-
     """
-    multiqc \\
-        $args \\
-        --filename multiqc_report.html \\
-        $reportFiles
+    mkdir multiqc_input
+    cp $fastqc_reports multiqc_input/
+    cp $samtools_stats multiqc_input/
+    cp $bcftools_stats multiqc_input/
+    cp $vep_stats multiqc_input/
 
-    echo \\"${task.process}:\\" > versions.yml
-    echo \\"  multiqc: \$(multiqc --version | sed 's/multiqc, version //')\\" >> versions.yml
+    multiqc multiqc_input
     """
 }

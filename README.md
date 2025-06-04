@@ -13,7 +13,7 @@ This pipeline performs the following steps:
 4. **Variant calling** – `macs3 callvar`
 5. **Variant annotation** – Ensembl `vep`
 6. **Variant filtering** – `bcftools`, `vcf2maf`
-7. **MultiQC** - `fastqc`, `samtools flagstat, stats`, `mosdepth`, `bcftools stats`  
+7. **MultiQC** - `fastqc`, `samtools flagstat & stats`, `mosdepth`, `bcftools stats`, `vep stats`
 
 <img width="1340" alt="workflow" src="https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74" />
 

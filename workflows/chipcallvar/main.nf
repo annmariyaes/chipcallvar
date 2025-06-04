@@ -3,6 +3,7 @@ include { PREPARE_GENOME } from '../../workflows/chipcallvar/subworkflows/prepar
 include { ALIGN_AND_PROCESS } from '../../workflows/chipcallvar/subworkflows/align_process'
 include { PEAK_CALLING } from '../../workflows/chipcallvar/subworkflows/peak_calling'
 include { VARIANT_CALLING } from '../../workflows/chipcallvar/subworkflows/variant_calling'
+include { VCF_STATS }  from '../../workflows/chipcallvar/subworkflows/stats'
 include { VARIANT_ANNOTATION } from '../../workflows/chipcallvar/subworkflows/annotate'
 include { VCF_POSTPROCESSING } from '../../workflows/chipcallvar/subworkflows/post_processing'
 
@@ -28,9 +29,13 @@ workflow CHIP_SEQ_VARIANT_CALLING {
 
     VARIANT_CALLING(PEAK_CALLING.out.peaks)
 
+    VCF_STATS(VARIANT_CALLING.out.vcf)    
+
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
 
     VCF_POSTPROCESSING(VARIANT_ANNOTATION.out.vcf)
+
+    MULTIQC()
 
     emit:
     fastqc_html = QUALITY_CONTROL.out.fastqc_html
@@ -50,6 +55,8 @@ workflow CHIP_SEQ_VCF_VARIANT_ANNOTATION {
     take: ch_input
 
     main:
+    VCF_STATS(ch_input)
+
     VARIANT_ANNOTATION(ch_input)
 
     VCF_POSTPROCESSING(VARIANT_ANNOTATION.out.vcf)

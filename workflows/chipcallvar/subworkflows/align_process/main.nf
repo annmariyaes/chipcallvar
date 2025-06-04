@@ -6,6 +6,7 @@
 
 include { BWAMEM2_MEM } from '../../../../modules/local/bwamem2/mem'
 include { SAMTOOLS_MAP } from '../../../../modules/local/samtools/mapping'
+include { SAMTOOLS_STATS } from '../../../../modules/local/samtools/stats'
 include { SAMTOOLS_MERGE } from '../../../../modules/local/samtools/merging'
 
 
@@ -20,6 +21,8 @@ workflow ALIGN_AND_PROCESS {
     ch_bam = BWAMEM2_MEM(ch_combined)
 
     ch_map = SAMTOOLS_MAP(ch_bam.sam)
+
+    stats = SAMTOOLS_STATS(ch_map)
 
     // Simple grouping by sample
     ch_grouped = ch_map
