@@ -6,7 +6,7 @@
 
 process BCFTOOLS_STATS {
     tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/multiqc/${meta.patient}", mode: 'copy'
+    publishDir "${params.OUTDIR}/multiqc", mode: 'copy'
     container "${params.BCFTOOLS_CONTAINER}"
 
     input:
