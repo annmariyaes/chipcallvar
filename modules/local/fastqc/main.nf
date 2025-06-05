@@ -6,7 +6,7 @@
 
 process FASTQC {
     tag "${meta.id}"
-    publishDir "${params.OUTDIR}/fastqc", mode: 'copy'
+    publishDir "${params.OUTDIR}/multiqc", mode: 'copy'
     container "${params.FASTQC_CONTAINER}"
     
     input:

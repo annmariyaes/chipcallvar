@@ -34,7 +34,7 @@ workflow CHIP_SEQ_VARIANT_CALLING {
     VCF_STATS(VCF_POSTPROCESSING.out.vcf)
         
     MULTIQC(
-   	 QUALITY_CONTROL.out.fastqc_html.map { it[1] }.collect(),
+   	 QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
    	 BAM_STATS.out.bam_stats.map { it[1] }.collect(), 
    	 VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
    	 VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect()
@@ -61,9 +61,7 @@ workflow CHIP_SEQ_VCF_VARIANT_ANNOTATION {
 
     main:
     VCF_STATS(ch_input)
-
     VARIANT_ANNOTATION(ch_input)
-
     VCF_POSTPROCESSING(VARIANT_ANNOTATION.out.vcf)
 
     emit:

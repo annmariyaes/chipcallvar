@@ -77,16 +77,3 @@ println """
 
 
 
-// Display pipeline execution summary upon completion
-workflow.onComplete {
-
-    def greenBold = "\033[1;32m"
-    def reset = "\033[0m"
-
-    println "${greenBold}Pipeline completed successfully${reset}"
-    println "${greenBold}Completed at : ${workflow.complete}${reset}"
-    println "${greenBold}Duration     : ${workflow.duration}${reset}"
-    println "${greenBold}CPU hours    : ${workflow.computeHours}${reset}"
-    println "${greenBold}Succeeded    : ${workflow.successCount}${reset}"
-    println "${greenBold}Cached       : ${workflow.cachedCount}${reset}"
-}

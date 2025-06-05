@@ -7,6 +7,7 @@
 process VCF2MAF {
     tag "${meta.patient}"
     publishDir "${params.OUTDIR}/mafs_annotated/${meta.patient}", mode: 'copy'
+    container "${params.SAMTOOLS_CONTAINER}"
 
     input:
     tuple val(meta), path(vcf)

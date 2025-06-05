@@ -34,3 +34,4 @@ process ENSEMBL_VEP {
         --verbose  
     """
 }
+

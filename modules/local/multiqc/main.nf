@@ -4,10 +4,10 @@ process MULTIQC {
     container "${params.MULTIQC_CONTAINER}"
     
     input:
-    path('fastqc/*')
-    path('samtools/*')
-    path('bcftools/*') 
-    path('vep/*')
+    path(fastqc_files)
+    path(samtools_files)
+    path(bcftools_files)
+    path(vep_files)
     
     output:
     path "multiqc_report.html", emit: html
