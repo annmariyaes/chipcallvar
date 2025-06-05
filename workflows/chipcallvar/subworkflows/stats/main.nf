@@ -1,4 +1,5 @@
 include { SAMTOOLS_STATS } from '../../../../modules/local/samtools/stats'
+include { MOSDEPTH_STATS } from '../../../../modules/local/mosdepth'
 include { BCFTOOLS_STATS } from '../../../../modules/local/bcftools/stats'
 
 
@@ -15,9 +16,11 @@ workflow BAM_STATS {
 
     main:
     SAMTOOLS_STATS(ch_merged)
+    MOSDEPTH_STATS(ch_merged)    
 
     emit:
-    bam_stats = SAMTOOLS_STATS.out.bam_stats
+    bam_stats1 = SAMTOOLS_STATS.out.bam_stats
+    bam_stats2 = MOSDEPTH_STATS.out.bam_stats
 }
 
 

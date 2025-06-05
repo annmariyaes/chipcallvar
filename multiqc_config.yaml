@@ -1,0 +1,20 @@
+module_order:
+  - fastqc
+  - samtools
+  - mosdepth
+  - bcftools
+  - vep
+
+mosdepth:
+  plot_dist: true
+  plot_coverage: true
+
+# Optional: Add other useful settings
+report_comment: "ChIP-seq Variant Calling Pipeline Results"
+remove_sections:
+  - fastqc_sequence_counts
+
+# Customize plot appearance
+custom_plot_config:
+  mosdepth-coverage-plot:
+    height: 400

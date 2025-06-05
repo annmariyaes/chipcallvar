@@ -32,12 +32,15 @@ workflow CHIP_SEQ_VARIANT_CALLING {
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
     VCF_POSTPROCESSING(VARIANT_ANNOTATION.out.vcf)
     VCF_STATS(VCF_POSTPROCESSING.out.vcf)
-        
+    
+    ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
     MULTIQC(
    	 QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
-   	 BAM_STATS.out.bam_stats.map { it[1] }.collect(), 
+   	 BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
+         BAM_STATS.out.bam_stats2.map { it[1] }.collect(), 
    	 VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
-   	 VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect()
+   	 VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
+         ch_multiqc_config
 	)
     
     emit:
