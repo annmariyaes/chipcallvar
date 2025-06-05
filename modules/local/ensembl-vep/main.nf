@@ -23,12 +23,14 @@ process ENSEMBL_VEP {
         -i ${vcf} \
         -o ${meta.patient}.macs3.vep.vcf \
         --cache \
-        --dir_cache ${params.VEP_CACHE} \
         --everything \
         --check_existing \
+        --force_overwrite \
         --vcf \
         --fork ${task.cpus} \
         --buffer_size 10000 \
-        --stats_file ${meta.patient}.vep.summary.html  
+        --stats_html \
+        --stats_file ${meta.patient}.vep.summary.html \
+        --verbose  
     """
 }

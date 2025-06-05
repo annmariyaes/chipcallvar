@@ -1,3 +1,5 @@
+nextflow.enable.dsl=2
+
 include { QUALITY_CONTROL } from '../../workflows/chipcallvar/subworkflows/quality_control'
 include { PREPARE_GENOME } from '../../workflows/chipcallvar/subworkflows/prepare_genome'
 include { ALIGN_AND_PROCESS } from '../../workflows/chipcallvar/subworkflows/align_process'
@@ -39,9 +41,8 @@ workflow CHIP_SEQ_VARIANT_CALLING {
 	)
     
     emit:
-    fastqc_html = QUALITY_CONTROL.out.fastqc_html
     vcf_out     = VCF_POSTPROCESSING.out.vcf
-    // maf_out     = VCF_POSTPROCESSING.out.maf
+    maf_out     = VCF_POSTPROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }
 

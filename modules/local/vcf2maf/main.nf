@@ -19,7 +19,7 @@ process VCF2MAF {
     # Uncompress the vcf file
     bgzip -c -d ${vcf} > ${meta.patient}.vcf
 
-    perl /storage/tools/vcf2maf_v1.6.22/mskcc-vcf2maf-f6d0c40/vcf2maf.pl \
+    perl vcf2maf.pl \
         --input-vcf ${vcf} \
         --output-maf ${meta.patient}.macs3.vep.maf \
         --tumor-id ${meta.patient} \

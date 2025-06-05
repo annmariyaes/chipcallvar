@@ -1,5 +1,13 @@
+nextflow.enable.dsl=2
+
 include { CHIP_SEQ_VARIANT_CALLING } from './workflows/chipcallvar'
 include { CHIP_SEQ_VCF_VARIANT_ANNOTATION } from './workflows/chipcallvar'
+
+/*
+========================================================================================
+   MAIN WORKFLOW - Variant Calling
+========================================================================================
+*/
 
 
 workflow CHIPCALLVAR {
@@ -67,17 +75,18 @@ println """
 \033[1;34m=============================================================================================================================\033[0m
 """
 
+
+
 // Display pipeline execution summary upon completion
 workflow.onComplete {
-    def BOLD_GREEN = "\u001B[1;32m"
-    def RESET = "\u001B[0m"
 
-    def msg = """\
+    def greenBold = "\033[1;32m"
+    def reset = "\033[0m"
 
-        ✅ Completed at : ${workflow.complete}
-        ⏳ Duration : ${workflow.duration}
-        """
-        .stripIndent()
-
-    println("${BOLD_GREEN}${msg}${RESET}")
+    println "${greenBold}Pipeline completed successfully${reset}"
+    println "${greenBold}Completed at : ${workflow.complete}${reset}"
+    println "${greenBold}Duration     : ${workflow.duration}${reset}"
+    println "${greenBold}CPU hours    : ${workflow.computeHours}${reset}"
+    println "${greenBold}Succeeded    : ${workflow.successCount}${reset}"
+    println "${greenBold}Cached       : ${workflow.cachedCount}${reset}"
 }
