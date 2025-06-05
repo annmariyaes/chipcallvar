@@ -8,7 +8,6 @@
 process VCF2MAF {
     tag "${meta.patient}"
     publishDir "${params.OUTDIR}/mafs_annotated/${meta.patient}", mode: 'copy'
-    conda 'bioconda::htslib bioconda::perl bioconda::pigz bioconda::samtools'
     
     input:
     tuple val(meta), path(vcf)
@@ -19,7 +18,7 @@ process VCF2MAF {
     script:
     """
     # Uncompress the vcf file
-    gunzip -c ${vcf} > ${meta.patient}.vcf
+    singularity exec -B /storage:/storage ${params.HTSLIB_CONTAINER} bgzip -c -d ${vcf} > ${meta.patient}.vcf
     
     # Run vcf2maf
     perl /storage/tools/vcf2maf_v1.6.22/mskcc-vcf2maf-f6d0c40/vcf2maf.pl \
@@ -31,9 +30,11 @@ process VCF2MAF {
         --vep-path ${params.VEP_PATH} \
         --species homo_sapiens \
         --ncbi-build GRCh38 \
+        --samtools-exec ${params.HTSLIB_CONTAINER} \
+        --tabix-exec ${params.HTSLIB_CONTAINER} \
         --inhibit-vep
     
-    # Compress the output
-    pigz -p ${task.cpus} ${meta.patient}.macs3.vep.maf || gzip ${meta.patient}.macs3.vep.maf
+    # Compress the maf file
+    gzip ${meta.patient}.macs3.vep.maf
     """
 }

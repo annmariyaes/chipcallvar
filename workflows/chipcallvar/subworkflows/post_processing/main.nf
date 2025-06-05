@@ -15,9 +15,9 @@ workflow VCF_POSTPROCESSING {
     main:
     bcftools = BCFTOOLS_REHEADER(ch_vcf)
     
-    // vcf2maf = VCF2MAF(bcftools.vcf)
+    vcf2maf = VCF2MAF(bcftools.vcf)
     
     emit:
     vcf = bcftools.vcf // [ meta, processed_vcf ]
-    // maf = vcf2maf.maf  // [ meta, maf ]
+    maf = vcf2maf.maf  // [ meta, maf ]
 }
