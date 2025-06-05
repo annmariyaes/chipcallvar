@@ -42,7 +42,7 @@ workflow CHIP_SEQ_VARIANT_CALLING {
     
     emit:
     vcf_out     = VCF_POSTPROCESSING.out.vcf
-    maf_out     = VCF_POSTPROCESSING.out.maf
+    // maf_out     = VCF_POSTPROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }
 
