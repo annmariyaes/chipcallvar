@@ -2,6 +2,7 @@
 *.DS_Store
 Icon?
 *.csv
+*.png
 
 # Ignore Nextflow work directory (where intermediate files are stored)
 work/

@@ -23,15 +23,15 @@ process SAMTOOLS_MERGE {
     if [ ${bam_count} -eq 1 ]; then
         # Single BAM: direct sort (skip merge step)
         # echo "Single BAM files: ${bams}"
-        samtools sort -o "${meta.sample}.bam" $bams
+        samtools sort --threads ${task.cpus} -o "${meta.sample}.bam" $bams
     else
         # Multiple BAMs: merge then sort
         # echo "Multiple BAM files: ${bams}"
-        samtools merge -f -o "${meta.sample}.merged.bam" $bams
-        samtools sort -o "${meta.sample}.bam" "${meta.sample}.merged.bam"
+        samtools merge --threads ${task.cpus} -f -o "${meta.sample}.merged.bam" $bams
+        samtools sort --threads ${task.cpus} -o "${meta.sample}.bam" "${meta.sample}.merged.bam"
         rm "${meta.sample}.merged.bam"
     fi
 
-    samtools index "${meta.sample}.bam"
+    samtools index --threads ${task.cpus} "${meta.sample}.bam"
     """
 }
