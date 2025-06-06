@@ -12,6 +12,7 @@ workflow PEAK_CALLING {
     ch_bam // channel: [ meta, bam, bai ]
     
     main:
+
     // Treatment samples (ChIP samples) - samples without control specified
     ch_treatment = ch_bam
         .filter { meta, bam, bai -> 
@@ -39,13 +40,14 @@ workflow PEAK_CALLING {
                 def (patient, treat_meta, treat_bam, treat_bai, null_value) = tuple_data
                 def updated_meta = treat_meta + [has_control: false]
                 [updated_meta, treat_bam, treat_bai, [], []]
-            } else {
+            } 
+            else {
                 // Has control sample: [patient, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai]
                 def (patient, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai) = tuple_data
                 def updated_meta = treat_meta + [has_control: true]
                 [updated_meta, treat_bam, treat_bai, ctrl_bam, ctrl_bai]
             }
-        }.view { "Joined for MACS3 callpeak: $it" }
+        }
     
     // Run MACS3 callpeak
     callpeak = MACS3_CALLPEAK(ch_joined)
