@@ -23,8 +23,10 @@ workflow CHIP_SEQ_VARIANT_CALLING {
     
     main:
     QUALITY_CONTROL(ch_input)
+
     ch_reference = Channel.fromPath(params.REFERENCE_GENOME, checkIfExists: true)
     PREPARE_GENOME(ch_reference)
+    
     ALIGN_AND_PROCESS(ch_input, PREPARE_GENOME.out.index)
     BAM_STATS(ALIGN_AND_PROCESS.out.merged)
     PEAK_CALLING(ALIGN_AND_PROCESS.out.merged)
@@ -35,17 +37,17 @@ workflow CHIP_SEQ_VARIANT_CALLING {
     
     ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
     MULTIQC(
-   	 QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
-   	 BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
-         BAM_STATS.out.bam_stats2.map { it[1] }.collect(), 
-   	 VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
-   	 VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
-         ch_multiqc_config
+        QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
+        BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
+        BAM_STATS.out.bam_stats2.map { it[1] }.collect(), 
+        VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
+        VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
+        ch_multiqc_config
 	)
     
     emit:
     vcf_out     = VCF_POSTPROCESSING.out.vcf
-    // maf_out     = VCF_POSTPROCESSING.out.maf
+    maf_out     = VCF_POSTPROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }
 
