@@ -2,7 +2,7 @@ OUTDIR: "/storage/projects/P024_ChIPseq_AE/nf-test"
 email: 'annmariya.elayani@gmail.com'
 # GENOME: '/scratch/databases/Homo_sapiens/NCBI/GRCh38/Sequence/WholeGenomeFasta/genome.fa'
 GENOME_SIZE: "hs"
-SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example2.csv"
+SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example3.csv"
 
 # start_from_vcf: false
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_merged.csv"
