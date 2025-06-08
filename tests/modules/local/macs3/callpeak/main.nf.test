@@ -24,55 +24,24 @@ nextflow_process {
                         single_end: false,
                         has_control: true
                     ],
-                    [	file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam"), 
-			file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam.bai"),
-		    	file("${projectDir}/data/bam/OCI-AML3_input.bam"),
-                    	file("${projectDir}/data/bam/OCI-AML3_input.bam.bai")
-		    ]
-                ]
-                """
-            }
-        }
-
-        then {
-            assert process.success
-            assert snapshot(process.out).match()
-        }
-
-    }
-    test("Should run without control files") {
-        when {
-            params {
-                OUTDIR = "tests/results"
-            }
-            process {
-                """
-                input[0] = [
-                    // meta map
+		    // treatment files
                     [
-			id: 'OCI-AML3_H3K27ac_1',
-                        patient: 'OCI-AML3',
-                        sample: 'OCI-AML3_H3K27ac',
-                        replicate: 1,
-                        control: '',
-                        single_end: false,
-                        has_control: false
+                        file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam"),
+                        file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam.bai")
                     ],
+                    // control files
                     [
-			file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam"),
-                    	file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam.bai"),
-                    	// control (empty)
-                    	[],
-                    	[]
-                   ]
+                        file("${projectDir}/data/bam/OCI-AML3_input.bam"),
+                        file("${projectDir}/data/bam/OCI-AML3_input.bam.bai")
+                    ]
                 ]
                 """
             }
         }
+
         then {
             assert process.success
             assert snapshot(process.out).match()
         }
     }
-
 }

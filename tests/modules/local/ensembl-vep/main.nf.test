@@ -32,6 +32,8 @@ nextflow_process {
 
         then {
             assert process.success
+	    assert process.out.vcf
+            assert process.out.vep_stats
             assert process.out.vcf[0][1].toString().endsWith('.vep.vcf')
             assert snapshot(process.out).match()
         }
