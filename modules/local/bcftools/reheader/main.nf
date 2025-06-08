@@ -1,4 +1,7 @@
-/* 
+/*
+=============================================================================
+        MODULE: BCFTOOLS 
+============================================================================= 
 Reheader the VCF file (wrong sample name, missing headers(SB,PL,AD)
 Extract SB values and convert them to AD values
 Annotate the VCF with these AD values

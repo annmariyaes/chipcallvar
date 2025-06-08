@@ -1,4 +1,9 @@
-// chipcallvar/modules/nf-core/macs3/callvar/main.nf
+/*
+=============================================================================
+        MODULE: MACS3 callvar
+=============================================================================
+*/
+
 
 process MACS3_CALLVAR {
     tag "${meta.patient}"

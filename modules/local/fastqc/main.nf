@@ -4,6 +4,7 @@
 =============================================================================
 */
 
+
 process FASTQC {
     tag "${meta.id}"
     publishDir "${params.OUTDIR}/multiqc", mode: 'copy'

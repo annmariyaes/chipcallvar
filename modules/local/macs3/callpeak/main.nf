@@ -1,3 +1,10 @@
+/*
+=============================================================================
+        MODULE: MACS3 callpeak
+=============================================================================
+*/
+
+
 process MACS3_CALLPEAK {
     tag "${meta.patient}"
     publishDir "${params.OUTDIR}/macs3/peak_calls/${meta.patient}", mode: 'copy'

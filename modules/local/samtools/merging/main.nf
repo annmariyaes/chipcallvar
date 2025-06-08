@@ -4,6 +4,7 @@
 =============================================================================
 */
 
+
 process SAMTOOLS_MERGE {
     tag "${meta.sample}"
     publishDir "${params.OUTDIR}/preprocessing/merged/${meta.sample}", mode: 'copy'
