@@ -1,0 +1,75 @@
+// tests/modules/local/macs3/callvar/main.nf.test
+nextflow_process {
+    name "Test Process MACS3_CALLVAR"
+    script "modules/local/macs3/callvar/main.nf"
+    process "MACS3_CALLVAR"
+    test("Should run without failures") {
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }    
+            process {
+                """
+                input[0] = [
+                    // meta map
+                    [
+                        id: 'OCI-AML3_H3K27ac_1', 
+                        patient: 'OCI-AML3', 
+                        sample: 'OCI-AML3_H3K27ac', 
+                        replicate: 1, 
+                        control: 'OCI-AML3_input', 
+                        single_end: false, 
+                        has_control: true
+                    ],
+                    [   file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam"),
+                        file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam.bai"),
+                        file("${projectDir}/data/bam/OCI-AML3_input.bam"),
+                        file("${projectDir}/data/bam/OCI-AML3_input.bam.bai")
+                    ]
+                ]
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert process.out.vcf.size() == 1
+        }
+    }
+    
+    test("Should run without control files") {
+        when {
+            params {
+                OUTDIR = "tests/results"
+            }
+            process {
+                """
+                input[0] = [
+                    // meta map
+                    [
+                        id: 'OCI-AML3_H3K27ac_1',
+                        patient: 'OCI-AML3',
+                        sample: 'OCI-AML3_H3K27ac',
+                        replicate: 1,
+                        control: '',
+                        single_end: false,
+                        has_control: false                        
+                    ],
+                    [
+			file("${projectDir}/data/peak/OCI-AML3.narrowPeak"),
+                    	file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam"),
+                    	file("${projectDir}/data/bam/OCI-AML3_H3K27ac.bam.bai"),
+                    	// control bams (empty)
+                    	[],
+                    	[]
+		]
+                ]
+                """
+            }
+        }
+        then {
+            assert process.success
+            assert process.out.vcf.size() == 1
+        }
+    }
+}

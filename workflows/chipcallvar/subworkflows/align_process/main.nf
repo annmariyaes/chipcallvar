@@ -17,8 +17,9 @@ workflow ALIGN_AND_PROCESS {
 
     main:
     ch_combined = ch_input.combine(ch_index)
-    ch_bam = BWAMEM2_MEM(ch_combined)
 
+    ch_bam = BWAMEM2_MEM(ch_combined)
+ 
     ch_map = SAMTOOLS_MAP(ch_bam.sam)
 
     // Simple grouping by sample

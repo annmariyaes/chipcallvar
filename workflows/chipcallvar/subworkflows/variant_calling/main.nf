@@ -17,7 +17,7 @@ workflow VARIANT_CALLING {
     // Filter valid peaks for variant calling
     ch_callvar = ch_peaks.filter { meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
         peaks.exists() && treat_bams.exists()
-    }
+    }.view()
     
     // Call variants
     callvar = MACS3_CALLVAR(ch_callvar)
