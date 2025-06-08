@@ -8,7 +8,8 @@
 process BWAMEM2_INDEX {
     tag { new File(params.REFERENCE_GENOME).getName() }
     container "${params.BWAMEM2_CONTAINER}"    
-    
+    label 'process_medium'
+
     input:
     path reference
 

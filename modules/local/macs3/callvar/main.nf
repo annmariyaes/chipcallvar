@@ -9,6 +9,7 @@ process MACS3_CALLVAR {
     tag "${meta.patient}"
     publishDir "${params.OUTDIR}/macs3/variant_calling/${meta.patient}", mode: 'copy'
     container "${params.MACS3_CONTAINER}" 
+    label 'process_high'
 
     input:
     tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
