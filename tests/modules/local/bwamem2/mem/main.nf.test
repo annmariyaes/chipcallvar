@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process BWAMEM2_MEM"
-    script "./modules/local/bwamem2/mem/main.nf"
+    script "modules/local/bwamem2/mem/main.nf"
     process "BWAMEM2_MEM"
 
     test("Should run without failures") {
