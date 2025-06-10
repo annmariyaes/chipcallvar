@@ -3,6 +3,8 @@
 Icon?
 *.csv
 *.png
+*.nextflow.log
+*.nextflow.log.*
 
 # Ignore Nextflow work directory (where intermediate files are stored)
 work/
@@ -11,3 +13,7 @@ work/
 test/
 test_subsampled/
 reference/
+data/
+results/
+nf-macs3/
+.nextflow/
