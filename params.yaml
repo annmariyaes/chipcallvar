@@ -1,8 +1,9 @@
 OUTDIR: "./nf-macs3"
 email: 'annmariya.elayani@gmail.com'
 GENOME: "./data/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta"
-ASSEMBLY: ''
-GENOME_SIZE: "GRCh38"
+ASSEMBLY: "GRCh38"
+GENOME_SIZE: "hs"
+step: "mapping"
 SAMPLESHEET: "/Users/ames/chipcallvar.1.0/samplesheet_example.csv"
 start_from_vcf: false
 

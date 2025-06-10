@@ -1,6 +1,7 @@
 nextflow.enable.dsl=2
 
-include { CHIP_SEQ_VARIANT_CALLING } from './workflows/chipcallvar'
+include { CHIP_SEQ_FASTQ_VARIANT_CALLING } from './workflows/chipcallvar'
+include { CHIP_SEQ_BAM_VARIANT_CALLING } from './workflows/chipcallvar'
 include { CHIP_SEQ_VCF_VARIANT_ANNOTATION } from './workflows/chipcallvar'
 
 /*
@@ -11,7 +12,9 @@ include { CHIP_SEQ_VCF_VARIANT_ANNOTATION } from './workflows/chipcallvar'
 
 
 workflow CHIPCALLVAR {
-    if (!params.start_from_vcf) {
+
+    // by default
+    if (params.step == 'mapping') {
         ch_input = Channel
             .fromPath(params.SAMPLESHEET)
             .splitCsv(header: true)
@@ -41,10 +44,30 @@ workflow CHIPCALLVAR {
                 return [ meta, fastq_files ]
             }
             // .view { it -> "$it" }
-        CHIP_SEQ_VARIANT_CALLING(ch_input)
+        CHIP_SEQ_FASTQ_VARIANT_CALLING(ch_input)
     }
 
-    else {
+    // 
+    else if (params.step == "variant_calling") {
+        ch_input = Channel
+            .fromPath(params.SAMPLESHEET)
+            .splitCsv(header: true)
+            .map { row ->
+                 def meta = [
+                    id: "${row.sample}_${row.replicate}", 
+                    patient: row.patient, 
+                    sample: row.sample,
+                    replicate: row.replicate.toInteger(),  
+                    control: row.control,
+                    single_end: row.single_end,
+                ]         
+                return [ [meta, file(row.bam), file(row.bai)] ]
+            }
+            // .view { it -> "$it" }
+        CHIP_SEQ_BAM_VARIANT_CALLING(ch_input)
+    }
+
+    else if (params.step == "annotate") {
         ch_vcf = Channel
             .fromPath(params.SAMPLESHEET)
             .splitCsv(header: true)
@@ -57,6 +80,7 @@ workflow CHIPCALLVAR {
             
         CHIP_SEQ_VCF_VARIANT_ANNOTATION(ch_vcf)
     }
+        
 }
 
 
