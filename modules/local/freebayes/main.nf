@@ -4,28 +4,27 @@
 =============================================================================
 */
 
-
 process FREEBAYES {
     tag "${meta.patient}"
     publishDir "${params.OUTDIR}/variant_calling/freebayes/${meta.patient}", mode: 'copy'
     container "${params.FREEBAYES_CONTAINER}"
     label 'process_high'
-
-    when:
-    'freebayes' in ${params.TOOLS}
-
+    
     input:
-    tuple val(meta), path(treat_bams), path(treat_bais)
-
+    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*")
+    
     output:
-    tuple val(meta), path("${meta.patient}.mutect2.vcf.gz"), emit: vcf
-
+    tuple val(meta), path("${meta.patient}.freebayes.vcf.gz"), emit: vcf
+    
     script:
     """
     freebayes \
-        -f {params.GENOME} \
+        -f ${reference} \
         -b ${treat_bams} \
-        -v \
-        -O ${meta.patient}.freebayes.vcf.gz
+        -v ${meta.patient}.freebayes.vcf
+    
+    # Compress and index the VCF file
+    bgzip ${meta.patient}.freebayes.vcf
+    tabix -p vcf ${meta.patient}.freebayes.vcf.gz
     """
 }

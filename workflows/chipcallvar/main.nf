@@ -31,7 +31,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     ALIGN_AND_PROCESS(ch_input, PREPARE_GENOME.out.index)
     BAM_STATS(ALIGN_AND_PROCESS.out.merged)
     PEAK_CALLING(ALIGN_AND_PROCESS.out.merged)
-    VARIANT_CALLING(PEAK_CALLING.out.peaks)
+    VARIANT_CALLING(PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index)
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
     VCF_POSTPROCESSING(VARIANT_ANNOTATION.out.vcf)
     VARIANT_FILTERING(VCF_POSTPROCESSING.out.vcf)
@@ -51,7 +51,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     
     emit:
     vcf_out = VCF_POSTPROCESSING.out.vcf
-    maf_out = VCF_POSTPROCESSING.out.maf
+    maf_out = MAF_PROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }
 
@@ -93,7 +93,7 @@ workflow CHIP_SEQ_BAM_VARIANT_CALLING {
     
     emit:
     vcf_out = VCF_POSTPROCESSING.out.vcf
-    maf_out = VCF_POSTPROCESSING.out.maf
+    maf_out = MAF_PROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }
 
@@ -123,6 +123,6 @@ workflow CHIP_SEQ_VCF_VARIANT_ANNOTATION {
 
     emit:
     vcf_out = VCF_POSTPROCESSING.out.vcf
-    maf_out = VCF_POSTPROCESSING.out.maf
+    maf_out = MAF_PROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }

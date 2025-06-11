@@ -11,11 +11,8 @@ process GATK_MUTECT2 {
     container "${params.GATK_CONTAINER}"
     label 'process_high'
     
-    when:
-    'mutect2' in ${params.TOOLS}
-
     input:
-    tuple val(meta), path(treat_bams), path(treat_bais)
+    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*")
 
     output:
     tuple val(meta), path("${meta.patient}.mutect2.vcf.gz"), emit: vcf
@@ -23,7 +20,7 @@ process GATK_MUTECT2 {
     script:
     """
     gatk Mutect2 \
-	-R {params.GENOME} \
+	-R ${reference} \
   	-I ${treat_bams} \
   	--germline-resource ${params.GNOMAD} \
   	--panel-of-normals ${params.PON} \

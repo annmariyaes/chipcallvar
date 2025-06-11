@@ -12,10 +12,10 @@ include { FREEBAYES } from '../../../../modules/local/freebayes'
 
 workflow VARIANT_CALLING {
     take:
-    ch_peaks // channel: [ meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais ]
+    ch_peaks 
+    ch_index
     
     main:
-
     ch_vcf = Channel.empty()
 
     // // Prepare channel for MACS3 as require peaks
@@ -25,11 +25,12 @@ workflow VARIANT_CALLING {
 
     // Prepare channel for GATK/FreeBayes (they don't need peaks)
     ch_vcall = ch_peaks.map { meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
-        [meta, treat_bams, treat_bais]
-    }.filter { meta, treat_bams, treat_bais ->
-        treat_bams.exists()
-    }
-    
+		        [meta, treat_bams, treat_bais]
+    		}
+    // Reference genome
+    ch_combined = ch_vcall.combine(ch_index)
+    ch_combined.view()
+
     // MACS3
     if (params.tools && params.tools.split(',').contains('macs3')) {
         MACS3_CALLVAR(ch_callvar)
@@ -38,13 +39,13 @@ workflow VARIANT_CALLING {
 
     // MUTECT2    
     if (params.tools && params.tools.split(',').contains('mutect2')) {
-        GATK_MUTECT2(ch_vcall)
+        GATK_MUTECT2(ch_combined)
         ch_vcf = ch_vcf.mix(GATK_MUTECT2.out.vcf)
     }
     
     // FREEBAYES
     if (params.tools && params.tools.split(',').contains('freebayes')) {
-        FREEBAYES(ch_vcall)
+        FREEBAYES(ch_combined)
         ch_vcf = ch_vcf.mix(FREEBAYES.out.vcf)
     }
     

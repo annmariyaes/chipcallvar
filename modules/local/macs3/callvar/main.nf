@@ -11,9 +11,6 @@ process MACS3_CALLVAR {
     container "${params.MACS3_CONTAINER}" 
     label 'process_high'
   
-    when:
-    'macs3' in ${params.TOOLS}
-
     input:
     tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
     

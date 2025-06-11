@@ -3,7 +3,7 @@
 **chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow to call variants (SNVs and INDELs) on ChIP-seq data.
 There are 3 different variant callers in this pipeline:
 1. [macs3 callvar](https://macs3-project.github.io/MACS/docs/callvar.html)
-2. [mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
+2. [GATK mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
 3. [freebayes](https://github.com/freebayes/freebayes)
 
 
@@ -14,7 +14,7 @@ This pipeline performs the following steps:
 1. **Read mapping** – `bwa-mem2`
 2. **Merging technical duplicates** – `samtools`
 3. **Peak calling** – `macs3 callpeak`
-4. **Variant calling** – `macs3 callvar`
+4. **Variant calling** – `macs3 callvar, mutect2, freebayes`
 5. **Variant annotation** – Ensembl `vep`
 6. **Variant filtering** – `bcftools`, `vcf2maf`
 7. **MultiQC** - `fastqc`, `samtools`, `mosdepth`, `bcftools`, `ensembl vep`
