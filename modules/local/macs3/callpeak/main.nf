@@ -10,6 +10,9 @@ process MACS3_CALLPEAK {
     publishDir "${params.OUTDIR}/macs3/peak_calls/${meta.patient}", mode: 'copy'
     container "${params.MACS3_CONTAINER}"
     label 'process_medium'
+   
+    when:
+    'macs3' in ${params.TOOLS}
 
     input:
     tuple val(meta), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)

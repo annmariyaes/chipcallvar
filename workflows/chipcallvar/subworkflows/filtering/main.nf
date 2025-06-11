@@ -1,19 +1,19 @@
 /*
 =============================================================================
-	SUBWORKFLOW: VCF Post-processing
+        SUBWORKFLOW: BCFTOOLS variant filtering
 =============================================================================
 */
 
-include { BCFTOOLS_REHEADER } from '../../../../modules/local/bcftools/reheader'
+include { BCFTOOLS_PLUGINS } from '../../../../modules/local/bcftools/filtering'
 
 
-workflow VCF_POSTPROCESSING {
+workflow VARIANT_FILTERING {
     take:
     ch_vcf // channel: [ meta, vcf ]
-    
+
     main:
-    bcftools = BCFTOOLS_REHEADER(ch_vcf)
-        
+    bcftools = BCFTOOLS_PLUGINS(ch_vcf)
+
     emit:
     vcf = bcftools.vcf // [ meta, processed_vcf ]
 }

@@ -29,7 +29,7 @@ process VCF2MAF {
         --vep-data ${params.VEP_CACHE} \
         --vep-path ${params.VEP_PATH} \
         --species homo_sapiens \
-        --ncbi-build {GENOME_ASSEMBLY} \
+        --ncbi-build\ ${params.ASSEMBLY} \
         --samtools-exec ${params.HTSLIB_CONTAINER} \
         --tabix-exec ${params.HTSLIB_CONTAINER} \
         --inhibit-vep

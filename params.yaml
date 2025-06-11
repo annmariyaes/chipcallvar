@@ -1,17 +1,13 @@
-OUTDIR: "./nf-macs3"
+OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-macs3'
 email: 'annmariya.elayani@gmail.com'
-GENOME: "./data/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta"
-ASSEMBLY: "GRCh38"
-GENOME_SIZE: "hs"
-step: "mapping"
-SAMPLESHEET: "/Users/ames/chipcallvar.1.0/samplesheet_example.csv"
-start_from_vcf: false
+# GENOME: '/scratch/databases/Homo_sapiens/NCBI/GRCh38/Sequence/WholeGenomeFasta/genome.fa'
+ASSEMBLY: 'GRCh38'
+GENOME_SIZE: 'hs'
+SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example.csv'
+step: 'mapping'
+tools: 'macs3,mutect2,freebayes'
 
 
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_merged.csv"
-
-# start_from_vcf:  true
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_intermediate.csv"
-
-# start_from_vcf: false
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_cell-lines.csv"

@@ -95,6 +95,7 @@ println """
 \033[1;36m  Samplesheet       :\033[0m ${params.SAMPLESHEET}
 \033[1;36m  Output Directory  :\033[0m ${params.OUTDIR}
 \033[1;36m  Reference genome  :\033[0m ${params.REFERENCE_GENOME}
+\033[1;36m  Genome Assembly   :\033[0m ${params.ASSEMBLY}
 \033[1;36m  VEP Cache         :\033[0m ${params.VEP_CACHE}
 \033[1;34m=============================================================================================================================\033[0m
 """
