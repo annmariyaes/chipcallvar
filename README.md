@@ -37,14 +37,14 @@ OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,t
 
 ### ⚙️ Parameters File (params.yaml)
 ```yaml
-OUTDIR: "./nf-macs3"
-email: 'example@gmail.com'
-GENOME: 'WholeGenomeFasta/genome.fa'
-ASSEMBLY: 'GRCh38'
-GENOME_SIZE: 'hs'
-SAMPLESHEET: './samplesheet_example.csv'
+samplesheet: './samplesheet_example.csv'
+outdir: "./nf-macs3"
+fasta: 'WholeGenomeFasta/genome.fa'
+assembly: 'GRCh38'
+genome_size: 'hs'
 step: 'mapping'
 tools: 'macs3,mutect2,freebayes'
+email: 'example@gmail.com'
 ```
 
 ### 🚀 Running the Pipeline

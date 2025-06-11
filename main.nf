@@ -96,6 +96,7 @@ println """
 \033[1;36m  Output Directory  :\033[0m ${params.OUTDIR}
 \033[1;36m  Reference genome  :\033[0m ${params.REFERENCE_GENOME}
 \033[1;36m  Fasta index       :\033[0m ${params.GENOME_FAI}
+\033[1;36m  Genome dictionary :\033[0m ${params.DICT}
 \033[1;36m  Genome Assembly   :\033[0m ${params.ASSEMBLY}
 \033[1;36m  Panel of Normals  :\033[0m ${params.PON}
 \033[1;36m  Germline database :\033[0m ${params.GNOMAD}

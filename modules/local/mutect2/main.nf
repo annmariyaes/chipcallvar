@@ -12,7 +12,7 @@ process GATK_MUTECT2 {
     label 'process_high'
     
     input:
-    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*")
+    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*"), path(dict)
 
     output:
     tuple val(meta), path("${meta.patient}.mutect2.vcf.gz"), emit: vcf
@@ -24,6 +24,7 @@ process GATK_MUTECT2 {
   	-I ${treat_bams} \
   	--germline-resource ${params.GNOMAD} \
   	--panel-of-normals ${params.PON} \
+        --sequence-dictionary ${dict} \
   	-O ${meta.patient}.mutect2.vcf.gz
     """
 }

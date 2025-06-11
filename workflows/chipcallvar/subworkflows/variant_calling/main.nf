@@ -18,9 +18,15 @@ workflow VARIANT_CALLING {
     main:
     ch_vcf = Channel.empty()
 
-    // // Prepare channel for MACS3 as require peaks
+    // Prepare channel for MACS3 as require peaks
     ch_callvar = ch_peaks.filter { meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
         peaks.exists() && treat_bams.exists()
+    }
+    
+    // MACS3
+    if (params.tools && params.tools.split(',').contains('macs3')) {
+        MACS3_CALLVAR(ch_callvar)
+        ch_vcf = ch_vcf.mix(MACS3_CALLVAR.out.vcf)
     }
 
     // Prepare channel for GATK/FreeBayes (they don't need peaks)
@@ -28,14 +34,9 @@ workflow VARIANT_CALLING {
 		        [meta, treat_bams, treat_bais]
     		}
     // Reference genome
+    ch_dict = Channel.fromPath(params.DICT, checkIfExists: true)
+    ch_vall = ch_index.combine(ch_dict)
     ch_combined = ch_vcall.combine(ch_index)
-    ch_combined.view()
-
-    // MACS3
-    if (params.tools && params.tools.split(',').contains('macs3')) {
-        MACS3_CALLVAR(ch_callvar)
-        ch_vcf = ch_vcf.mix(MACS3_CALLVAR.out.vcf)
-    }
 
     // MUTECT2    
     if (params.tools && params.tools.split(',').contains('mutect2')) {
