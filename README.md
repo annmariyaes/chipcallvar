@@ -1,6 +1,10 @@
 # chipcallvar
 
-**chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow to call variants (SNVs and INDELs) on ChIP-seq data primarily taking advantage of [macs3 callvar](https://macs3-project.github.io/MACS/docs/callvar.html)  variant caller.
+**chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow to call variants (SNVs and INDELs) on ChIP-seq data.
+There are 3 different variant callers in this pipeline:
+1. [macs3 callvar](https://macs3-project.github.io/MACS/docs/callvar.html)
+2. [mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
+3. [freebayes](https://github.com/freebayes/freebayes)
 
 
 ## 🧬 Workflow Overview
@@ -36,8 +40,11 @@ OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,t
 OUTDIR: "./nf-macs3"
 email: 'example@gmail.com'
 GENOME: 'WholeGenomeFasta/genome.fa'
-GENOME_SIZE: "hs"
-SAMPLESHEET: "./samplesheet_example.csv"
+ASSEMBLY: 'GRCh38'
+GENOME_SIZE: 'hs'
+SAMPLESHEET: './samplesheet_example.csv'
+step: 'mapping'
+tools: 'macs3,mutect2,freebayes'
 ```
 
 ### 🚀 Running the Pipeline
