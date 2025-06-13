@@ -11,7 +11,7 @@ process FREEBAYES {
     label 'process_high'
     
     input:
-    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*")
+    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*"), path(dict)
     
     output:
     tuple val(meta), path("${meta.patient}.freebayes.vcf.gz"), emit: vcf

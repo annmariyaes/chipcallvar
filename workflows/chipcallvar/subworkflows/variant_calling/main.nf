@@ -34,9 +34,10 @@ workflow VARIANT_CALLING {
 		        [meta, treat_bams, treat_bais]
     		}
     // Reference genome
-    ch_dict = Channel.fromPath(params.DICT, checkIfExists: true)
-    ch_vall = ch_index.combine(ch_dict)
-    ch_combined = ch_vcall.combine(ch_index)
+    ch_dict = Channel.fromPath(params.GENOME_DICT, checkIfExists: true)
+    ch_indexes = ch_index.combine(ch_dict)
+    ch_combined = ch_vcall.combine(ch_indexes)
+    ch_combined.view()
 
     // MUTECT2    
     if (params.tools && params.tools.split(',').contains('mutect2')) {
