@@ -6,7 +6,7 @@
 
 process BCFTOOLS_STATS {
     tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/multiqc", mode: 'copy'
+    publishDir "${params.OUTDIR}/multiqc/${caller}", mode: 'copy'
 
     input:
     tuple val(meta), path(vcf)

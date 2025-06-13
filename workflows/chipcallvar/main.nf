@@ -38,7 +38,6 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
 
     PEAK_CALLING(ALIGN_AND_PROCESS.out.merged)
     VARIANT_CALLING(PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index, PRE_PROCESSING.out.intervals)
-
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
     VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
 
@@ -82,23 +81,25 @@ workflow CHIP_SEQ_BAM_VARIANT_CALLING {
     BAM_MERGING(ch_input)
     BAM_STATS(ALIGN_AND_PROCESS.out.merged)
     PEAK_CALLING(ALIGN_AND_PROCESS.out.merged)
-    VARIANT_CALLING(PEAK_CALLING.out.peaks)
+    VARIANT_CALLING(PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index, PRE_PROCESSING.out.intervals)
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
-    VCF_POSTPROCESSING(VARIANT_ANNOTATION.out.vcf)
-    VCF_STATS(VCF_POSTPROCESSING.out.vcf)
-    
-    ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
+    VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
+
+    VCF_STATS(VARIANT_FILTERING.out.vcf)
+    MAF_PROCESSING(VARIANT_FILTERING.out.vcf)
+
+    ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)
     MULTIQC(
         QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
         BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
-        BAM_STATS.out.bam_stats2.map { it[1] }.collect(), 
+        BAM_STATS.out.bam_stats2.map { it[1] }.collect(),
         VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
         VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
         ch_multiqc_config
-	)
-    
+        )
+
     emit:
-    vcf_out = VCF_POSTPROCESSING.out.vcf
+    vcf_out = VARIANT_FILTERING.out.vcf
     maf_out = MAF_PROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }
@@ -118,17 +119,23 @@ workflow CHIP_SEQ_VCF_VARIANT_ANNOTATION {
     main:
     VCF_STATS(ch_input)
     VARIANT_ANNOTATION(ch_input)
-    VCF_POSTPROCESSING(VARIANT_ANNOTATION.out.vcf)
+    VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
 
-    ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
+    VCF_STATS(VARIANT_FILTERING.out.vcf)
+    MAF_PROCESSING(VARIANT_FILTERING.out.vcf)
+
+    ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)
     MULTIQC(
+        QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
+        BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
+        BAM_STATS.out.bam_stats2.map { it[1] }.collect(),
         VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
         VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
         ch_multiqc_config
-	)
+        )
 
     emit:
-    vcf_out = VCF_POSTPROCESSING.out.vcf
+    vcf_out = VARIANT_FILTERING.out.vcf
     maf_out = MAF_PROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }
