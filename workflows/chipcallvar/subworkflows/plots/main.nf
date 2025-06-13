@@ -13,7 +13,12 @@ workflow MAF_PROCESSING {
 
     main:
     vcf2maf = VCF2MAF(ch_vcf)
-
+    
+    ch_maf_dir = vcf2maf.maf.map { meta, maf_file ->
+        [meta, maf_file.parent]
+    }
+    MAFTOOLS(ch_maf_dir)
+    
     emit:
     maf = vcf2maf.maf  // [ meta, maf ]
 }

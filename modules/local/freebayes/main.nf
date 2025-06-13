@@ -1,6 +1,6 @@
 /*
 =============================================================================
-        MODULE: Freebayes
+        MODULE: Freebayes variant calling
 =============================================================================
 */
 
@@ -11,20 +11,22 @@ process FREEBAYES {
     label 'process_high'
     
     input:
-    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*"), path(dict)
+    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*"), path(dict), path(intervals)
     
     output:
     tuple val(meta), path("${meta.patient}.freebayes.vcf.gz"), emit: vcf
     
     script:
+    interval = intervals.baseName
     """
     freebayes \
         -f ${reference} \
         -b ${treat_bams} \
-        -v ${meta.patient}.freebayes.vcf
+        -t ${intervals} \
+        > ${meta.patient}.${interval}.freebayes.vcf
     
     # Compress and index the VCF file
-    bgzip ${meta.patient}.freebayes.vcf
-    tabix -p vcf ${meta.patient}.freebayes.vcf.gz
+    bgzip ${meta.patient}.${interval}.freebayes.vcf
+    tabix -p vcf ${meta.patient}.${interval}.freebayes.vcf.gz
     """
 }

@@ -13,10 +13,10 @@ process MAFTOOLS {
     tuple val(meta), path(maf_dir)
 
     output:
-    tuple val(meta), emit: plot
+    tuple val(meta), path("*.png"), emit: plots, optional: true
 
     script:
     """
-    Rscript variant_callers.R ${maf_dir}
+    Rscript ${projectDir}/scripts/variant_callers.R ${maf_dir}
     """
 }

@@ -16,10 +16,11 @@ process CREATE_INTERVALS_BED {
     path fai
 
     output:
-    path "genome_${params.WINDOW_SIZE}bp_intervals.bed", emit: intervals
+    path(genome_chunks.list), emit: intervals
 
     script:
     """
-    bedtools makewindows -g ${fai} -w ${params.WINDOW_SIZE} > genome_${params.WINDOW_SIZE}bp_intervals.bed
+    bedtools makewindows -g ${fai} -w ${params.WINDOW_SIZE} > genome_chunks.bed
+    awk '{print \$1 ":" \$2+1 "-" \$3}' genome_chunks.bed > genome_chunks.list
     """
 }
