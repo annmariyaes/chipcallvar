@@ -8,7 +8,7 @@ include { BAM_MERGING } from '../../workflows/chipcallvar/subworkflows/merging'
 include { PEAK_CALLING } from '../../workflows/chipcallvar/subworkflows/peak_calling'
 include { VARIANT_CALLING } from '../../workflows/chipcallvar/subworkflows/variant_calling'
 include { BAM_STATS; VCF_STATS }  from '../../workflows/chipcallvar/subworkflows/stats'
-include { VARIANT_ANNOTATION } from '../../workflows/chipcallvar/subworkflows/annotate'
+include { VARIANT_ANNOTATION } from '../../workflows/chipcallvar/subworkflows/variant_annotation'
 include { VCF_POSTPROCESSING } from '../../workflows/chipcallvar/subworkflows/post_processing'
 include { VARIANT_FILTERING } from '../../workflows/chipcallvar/subworkflows/variant_filtering'
 include { MAF_PROCESSING } from '../../workflows/chipcallvar/subworkflows/plots'
@@ -40,8 +40,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     VARIANT_CALLING(PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index, PRE_PROCESSING.out.intervals)
 
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
-    VCF_POSTPROCESSING(VARIANT_ANNOTATION.out.vcf)
-    VARIANT_FILTERING(VCF_POSTPROCESSING.out.vcf)
+    VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
 
     VCF_STATS(VARIANT_FILTERING.out.vcf)
     MAF_PROCESSING(VARIANT_FILTERING.out.vcf)
@@ -57,7 +56,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
 	)
     
     emit:
-    vcf_out = VCF_POSTPROCESSING.out.vcf
+    vcf_out = VARIANT_FILTERING.out.vcf
     maf_out = MAF_PROCESSING.out.maf
     multiqc_html = MULTIQC.out.html
 }

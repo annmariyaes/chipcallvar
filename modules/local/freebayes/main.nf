@@ -14,7 +14,7 @@ process FREEBAYES {
     tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path("*"), path(dict), path(intervals)
     
     output:
-    tuple val(meta), path("${meta.patient}.freebayes.vcf.gz"), emit: vcf
+    tuple val(meta), path("${meta.patient}.${interval}.freebayes.vcf"), emit: vcf
     
     script:
     interval = intervals.baseName
@@ -23,10 +23,6 @@ process FREEBAYES {
         -f ${reference} \
         -b ${treat_bams} \
         -t ${intervals} \
-        > ${meta.patient}.${interval}.freebayes.vcf
-    
-    # Compress and index the VCF file
-    bgzip ${meta.patient}.${interval}.freebayes.vcf
-    tabix -p vcf ${meta.patient}.${interval}.freebayes.vcf.gz
+        > ${meta.patient}.${interval}.freebayes.vcf    
     """
 }

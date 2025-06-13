@@ -8,6 +8,7 @@ include { BCFTOOLS as BCFTOOLS_MACS3 } from '../../../../modules/local/bcftools/
 include { BCFTOOLS as BCFTOOLS_MUTECT2 } from '../../../../modules/local/bcftools/filtering'
 include { BCFTOOLS as BCFTOOLS_FREEBAYES } from '../../../../modules/local/bcftools/filtering'
 
+
 workflow VARIANT_FILTERING {
     take:
     ch_vep 

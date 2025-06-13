@@ -9,6 +9,7 @@
 process BCFTOOLS {
     tag "$meta.patient"
     publishDir "${params.OUTDIR}/annotation/${caller}/${meta.patient}", mode: 'copy'
+    container "${params.BCFTOOLS_CONTAINER}"
     
     input:
     tuple val(meta), path(vcf)
@@ -24,7 +25,7 @@ process BCFTOOLS {
     bcftools +fill-tags ${vcf} -Oz -o ${meta.patient}_filled.vcf.gz -t FORMAT/VAF
     
     # Step 2: Filter using split-vep
-    bcftools +split-vep -i 'INFO/DP>=${params.DP} & FORMAT/VAF>=${params.VAF} & (gnomADe_AF<=${params.gnomADe_AF} | gnomADe_AF==".")' \
+    bcftools +split-vep -i 'FORMAT/DP>=${params.DP} & FORMAT/VAF>=${params.VAF} & (gnomADe_AF<=${params.gnomADe_AF} | gnomADe_AF==".")' \
                         ${meta.patient}_filled.vcf.gz -Oz -o ${meta.patient}.${caller}.filtered.vcf.gz
     
     # Step 3: Index the filtered VCF

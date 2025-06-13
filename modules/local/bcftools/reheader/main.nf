@@ -13,15 +13,16 @@ When converting a VCF to a MAF file, the t_ref_count and t_alt_count columns are
 process BCFTOOLS_REHEADER {
     tag "$meta.patient"
     publishDir "${params.OUTDIR}/annotation/${caller}/${meta.patient}", mode: 'copy'
+    container "${params.BCFTOOLS_CONTAINER}"
     
     input:
     tuple val(meta), path(vcf)
     val caller
     
     output:
-    tuple val(meta), path("${meta.patient}.macs3.vep.filled.vcf.gz"), emit: vcf
-    tuple val(meta), path("${meta.patient}.macs3.vep.filled.vcf.gz.tbi"), emit: vcf_tbi
-    
+    tuple val(meta), path("${meta.patient}.${caller}.vep.filled.vcf.gz"), emit: vcf
+    tuple val(meta), path("${meta.patient}.${caller}.vep.filled.vcf.gz.tbi"), emit: vcf_tbi
+     
     script:
     """
     # Extract the original VCF header
@@ -50,8 +51,8 @@ process BCFTOOLS_REHEADER {
     }' > ${meta.patient}.SB.values.txt
     
     # Compress and index SB file
-    singularity exec -B /storage:/storage ${params.HTSLIB_CONTAINER} bgzip ${meta.patient}.SB.values.txt
-    singularity exec -B /storage:/storage ${params.HTSLIB_CONTAINER} tabix -s1 -b2 -e2 ${meta.patient}.SB.values.txt.gz
+    bgzip ${meta.patient}.SB.values.txt
+    tabix -s1 -b2 -e2 ${meta.patient}.SB.values.txt.gz
     
     # Extract AD from SB and save to a temporary file
     bcftools query -f '%CHROM\\t%POS\\t%REF\\t%ALT\\t%INFO/SB\\n' ${meta.patient}.reheader.vcf | awk '
@@ -65,18 +66,19 @@ process BCFTOOLS_REHEADER {
     }' > ${meta.patient}.AD.values.txt
     
     # Compress and index AD file
-    singularity exec -B /storage:/storage ${params.HTSLIB_CONTAINER} bgzip ${meta.patient}.AD.values.txt
-    singularity exec -B /storage:/storage ${params.HTSLIB_CONTAINER} tabix -s1 -b2 -e2 ${meta.patient}.AD.values.txt.gz
-    
+    bgzip ${meta.patient}.AD.values.txt
+    tabix -s1 -b2 -e2 ${meta.patient}.AD.values.txt.gz
+
     # Annotate VCF with AD, SB fields
     bcftools annotate -a ${meta.patient}.AD.values.txt.gz -c CHROM,POS,REF,ALT,FORMAT/AD -o ${meta.patient}.with.ad.vcf ${meta.patient}.reheader.vcf
     bcftools annotate -a ${meta.patient}.SB.values.txt.gz -c CHROM,POS,REF,ALT,FORMAT/SB -o ${meta.patient}.with.sb.vcf ${meta.patient}.with.ad.vcf
     
     # Create FORMAT/VAF from FORMAT/AD
-    bcftools +fill-tags ${meta.patient}.with.sb.vcf -Oz -o ${meta.patient}.macs3.vep.filled.vcf.gz -t FORMAT/VAF
-    singularity exec -B /storage:/storage ${params.HTSLIB_CONTAINER} tabix -p vcf ${meta.patient}.macs3.vep.filled.vcf.gz
+    bcftools +fill-tags ${meta.patient}.with.sb.vcf -Oz -o ${meta.patient}.${caller}.vep.filled.vcf.gz -t FORMAT/VAF
+    tabix -p vcf ${meta.patient}.${caller}.vep.filled.vcf.gz
     
     # Cleanup
     rm header.txt ${meta.patient}.AD.values.txt.gz ${meta.patient}.AD.values.txt.gz.tbi ${meta.patient}.SB.values.txt.gz ${meta.patient}.SB.values.txt.gz.tbi ${meta.patient}.reheader.vcf ${meta.patient}.with.ad.vcf ${meta.patient}.with.sb.vcf
     """
 }
+
