@@ -1,10 +1,7 @@
 # chipcallvar
 
 **chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow to call variants (SNVs and INDELs) on ChIP-seq data.
-There are 3 different variant callers in this pipeline:
-1. [macs3 callvar](https://macs3-project.github.io/MACS/docs/callvar.html)
-2. [GATK mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
-3. [freebayes](https://github.com/freebayes/freebayes)
+There are 3 different variant callers in this pipeline: [macs3 callvar](https://macs3-project.github.io/MACS/docs/callvar.html), [GATK mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2), [freebayes](https://github.com/freebayes/freebayes)
 
 
 ## 🧬 Workflow Overview
@@ -13,11 +10,13 @@ This pipeline performs the following steps:
 
 1. **Read mapping** – `bwa-mem2`
 2. **Merging technical duplicates** – `samtools`
-3. **Peak calling** – `macs3 callpeak`
-4. **Variant calling** – `macs3 callvar, mutect2, freebayes`
-5. **Variant annotation** – Ensembl `vep`
-6. **Variant filtering** – `bcftools`, `vcf2maf`
-7. **MultiQC** - `fastqc`, `samtools`, `mosdepth`, `bcftools`, `ensembl vep`
+3. **Create intervals** - `bedtools`
+4. **Peak calling** – `macs3 callpeak`
+5. **Variant calling** – `macs3 callvar, GATK mutect2, freebayes`
+6. **Variant annotation** – Ensembl `vep`
+7. **Variant filtering** – `bcftools`
+8. **Downstream analysis** – `vcf2maf, maftools`
+8. **MultiQC** - `fastqc`, `samtools`, `mosdepth`, `bcftools`, `ensembl vep`
 
 <img width="1340" alt="workflow" src="https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74" />
 
@@ -39,7 +38,9 @@ OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,t
 ```yaml
 samplesheet: './samplesheet_example.csv'
 outdir: "./nf-macs3"
-fasta: 'WholeGenomeFasta/genome.fa'
+fasta: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
+fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
+dict: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.dict'
 assembly: 'GRCh38'
 genome_size: 'hs'
 step: 'mapping'
