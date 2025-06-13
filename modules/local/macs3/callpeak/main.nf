@@ -7,7 +7,7 @@
 
 process MACS3_CALLPEAK {
     tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/peak_calls/macs3/${meta.patient}", mode: 'copy'
+    publishDir "${params.OUTDIR}/peak_calling/macs3/${meta.patient}", mode: 'copy'
     container "${params.MACS3_CONTAINER}"
     label 'process_medium'
    

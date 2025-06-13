@@ -12,10 +12,11 @@ When converting a VCF to a MAF file, the t_ref_count and t_alt_count columns are
 
 process BCFTOOLS_REHEADER {
     tag "$meta.patient"
-    publishDir "${params.OUTDIR}/annotation/ensembl_vep/${meta.patient}", mode: 'copy'
+    publishDir "${params.OUTDIR}/annotation/${caller}/${meta.patient}", mode: 'copy'
     
     input:
     tuple val(meta), path(vcf)
+    val caller
     
     output:
     tuple val(meta), path("${meta.patient}.macs3.vep.filled.vcf.gz"), emit: vcf

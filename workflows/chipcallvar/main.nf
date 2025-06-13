@@ -10,7 +10,7 @@ include { VARIANT_CALLING } from '../../workflows/chipcallvar/subworkflows/varia
 include { BAM_STATS; VCF_STATS }  from '../../workflows/chipcallvar/subworkflows/stats'
 include { VARIANT_ANNOTATION } from '../../workflows/chipcallvar/subworkflows/annotate'
 include { VCF_POSTPROCESSING } from '../../workflows/chipcallvar/subworkflows/post_processing'
-include { VARIANT_FILTERING } from '../../workflows/chipcallvar/subworkflows/filtering'
+include { VARIANT_FILTERING } from '../../workflows/chipcallvar/subworkflows/variant_filtering'
 include { MAF_PROCESSING } from '../../workflows/chipcallvar/subworkflows/plots'
 include { MULTIQC } from '../../modules/local/multiqc'
 
@@ -32,7 +32,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     ALIGN_AND_PROCESS(ch_input, PREPARE_GENOME.out.index)
     BAM_STATS(ALIGN_AND_PROCESS.out.merged)
 
-   // fai file for interval
+    // fai file for interval
     ch_fai = Channel.fromPath(params.GENOME_FAI, checkIfExists: true)
     PRE_PROCESSING(ch_fai)
 
@@ -45,7 +45,6 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
 
     VCF_STATS(VARIANT_FILTERING.out.vcf)
     MAF_PROCESSING(VARIANT_FILTERING.out.vcf)
-
     
     ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
     MULTIQC(

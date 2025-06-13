@@ -7,16 +7,26 @@
 
 process MAFTOOLS {
     tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/maftools/${meta.patient}", mode: 'copy'
+    publishDir "${params.OUTDIR}/plots", mode: 'copy'
+    container "${params.R_CONTAINER}"
 
     input:
-    tuple val(meta), path(maf_dir)
+    tuple val(meta), path(maf_files)
+    path(r_script)
 
     output:
-    tuple val(meta), path("*.png"), emit: plots, optional: true
+    tuple val(meta), path("*.png"), emit: plots
+    path "*.png", emit: all_plots
 
     script:
     """
-    Rscript ${projectDir}/scripts/variant_callers.R ${maf_dir}
+    # Make R script executable
+    chmod +x ${r_script}
+    
+    # Run the R script with proper arguments
+    Rscript ${r_script} \\
+        --maf_dir . \\
+        --output_dir . \\
+        --patient_id ${meta.patient}
     """
 }

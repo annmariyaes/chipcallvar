@@ -7,7 +7,7 @@ Stitching the vcf files together
 
 
 process BCFTOOLS_CONCAT {
-    tag "${meta.patient}_${caller}"
+    tag "${meta.patient}"
     publishDir "${params.OUTDIR}/variant_calling/${caller}/${meta.patient}", mode: 'copy'
     container "${params.BCFTOOLS_CONTAINER}"
     label 'process_low'

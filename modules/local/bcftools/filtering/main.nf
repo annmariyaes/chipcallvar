@@ -6,12 +6,13 @@
 
 
 
-process BCFTOOLS_PLUGINS {
+process BCFTOOLS {
     tag "$meta.patient"
-    publishDir "${params.OUTDIR}/annotation/ensembl_vep/${meta.patient}", mode: 'copy'
+    publishDir "${params.OUTDIR}/annotation/${caller}/${meta.patient}", mode: 'copy'
     
     input:
     tuple val(meta), path(vcf)
+    val caller
     
     output:
     tuple val(meta), path("${meta.patient}.filtered.vcf.gz"), emit: vcf
