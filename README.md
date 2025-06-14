@@ -59,9 +59,7 @@ email: 'example@gmail.com'
 ### 🚀 Running the Pipeline
 
 ```bash
-nextflow run main.nf \
-   -params-file params.yaml \
-   -resume
+nextflow run main.nf -params-file params.yaml 
 ```
 
 ---
