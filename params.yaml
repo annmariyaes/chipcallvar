@@ -8,8 +8,7 @@ GENOME_SIZE: 'hs'
 SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example.csv'
 
 step: 'mapping'
-tools: 'mutect2,macs3,freebayes'
-
+tools: 'mutect2,freebayes'
 
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_merged.csv"
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_intermediate.csv"

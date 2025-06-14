@@ -22,6 +22,7 @@ process FREEBAYES {
     freebayes \
         -f ${reference} \
         -b ${treat_bams} \
+        -t ${intervals} \
         > ${meta.patient}.${interval}.freebayes.vcf    
     """
 }
