@@ -4,9 +4,9 @@
 
 The pipeline integrates the following tools:
 
-🧬 [MACS3 `callvar`](https://macs3-project.github.io/MACS/docs/callvar.html): peak-aware variant caller optimized for ChIP-seq data
-🧬 [GATK `Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): industry-standard somatic SNV/INDEL caller
-🧬 [FreeBayes](https://github.com/freebayes/freebayes): haplotype-based variant detection
+1. [MACS3 `callvar`](https://macs3-project.github.io/MACS/docs/callvar.html): peak-aware variant caller optimized for ChIP-seq data
+2. [GATK `Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): industry-standard somatic SNV/INDEL caller
+3. [FreeBayes](https://github.com/freebayes/freebayes): haplotype-based variant detection
 
 
 
@@ -14,7 +14,7 @@ The pipeline integrates the following tools:
 
 - Read alignment and deduplication – `bwa-mem2`, `samtools`
 - Merging technical replicates – `samtools merge`
-- Interval creation – `bedtools makewindows`
+- Interval creation – `bedtools`
 - Peak calling – `macs3 callpeak`
 - Variant calling – `macs3 callvar`, `GATK Mutect2`, `FreeBayes`
 - Variant annotation – `Ensembl VEP`
