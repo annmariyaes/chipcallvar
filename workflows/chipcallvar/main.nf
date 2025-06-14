@@ -49,9 +49,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     	QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
     	BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
     	BAM_STATS.out.bam_stats2.map { it[1] }.collect(),
-    	VCF_STATS.out.vcf_stats.collectFile(name: 'all_vcf_stats.txt') { meta, file ->
-        	["${meta.caller}_${file.baseName}", file.text]
-    	}.splitText(),
+    	VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
     	VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
     	ch_multiqc_config
     )   
