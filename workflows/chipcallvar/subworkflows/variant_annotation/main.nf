@@ -6,7 +6,7 @@
 
 
 include { ENSEMBL_VEP as ENSEMBL_VEP_MACS3 } from '../../../../modules/local/ensembl-vep'
-include { BCFTOOLS_REHEADER } from '../../../../modules/local/bcftools/reheader'
+include { BCFTOOLS_REHEADER as BCFTOOLS_REHEADER_MACS3 } from '../../../../modules/local/bcftools/reheader'
 include { ENSEMBL_VEP as ENSEMBL_VEP_MUTECT2 } from '../../../../modules/local/ensembl-vep'
 include { ENSEMBL_VEP as ENSEMBL_VEP_FREEBAYES } from '../../../../modules/local/ensembl-vep'
 

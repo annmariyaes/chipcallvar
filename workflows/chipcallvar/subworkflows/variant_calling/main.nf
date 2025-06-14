@@ -16,6 +16,7 @@ include { BCFTOOLS_CONCAT as BCFTOOLS_CONCAT_FREEBAYES } from '../../../../modul
 
 workflow VARIANT_CALLING {
     take:
+    ch_bam
     ch_peaks
     ch_index
     ch_interval
@@ -23,10 +24,55 @@ workflow VARIANT_CALLING {
     main:
     ch_vcf = Channel.empty()
 
+    ch_treatment = ch_bam
+        .filter { meta, bam, bai ->
+            !meta.containsKey('control') ||
+            meta.control == null ||
+            meta.control == ""
+        }
+        .map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
+
+    // Control samples (input/control) - samples that ARE controls
+    ch_control = ch_bam
+        .filter { meta, bam, bai ->
+            meta.containsKey('control') &&
+            meta.control != null &&
+            meta.control != ""
+        }
+        .map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
+
+    // Join treatment and control samples by patient
+    ch_joined = ch_treatment
+        .join(ch_control, remainder: true)
+        .map { tuple_data ->
+            if (tuple_data.size() == 5) {
+                // No control sample: [patient, treat_meta, treat_bam, treat_bai, null]
+                def (patient, treat_meta, treat_bam, treat_bai, null_value) = tuple_data
+                def updated_meta = treat_meta + [has_control: false]
+                [updated_meta, treat_bam, treat_bai, [], []]
+            }
+            else {
+                // Has control sample: [patient, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai]
+                def (patient, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai) = tuple_data
+                def updated_meta = treat_meta + [has_control: true]
+                [updated_meta, treat_bam, treat_bai, ctrl_bam, ctrl_bai]
+            }
+        }
+
     // Prepare channel for MACS3 as require peaks
-    ch_callvar = ch_peaks.filter { meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
-        peaks.exists() && treat_bams.exists()
+    ch_peaks_keyed = ch_peaks.map { meta, peaks ->
+        [meta.patient, meta, peaks]
     }
+
+    ch_bams_keyed = ch_joined.map { meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
+        [meta.patient, meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
+    }
+
+    ch_callvar = ch_peaks_keyed
+        .join(ch_bams_keyed)
+        .map { patient, peaks_meta, peaks, bams_meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
+            [peaks_meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
+        }
     ch_combinedd = ch_callvar.combine(ch_interval)
 
     // MACS3 - Tag with caller name
@@ -40,12 +86,12 @@ workflow VARIANT_CALLING {
         ch_vcf = ch_vcf.mix(
             BCFTOOLS_CONCAT_MACS3.out.vcf.map { meta, vcf -> 
                 [meta + [caller: 'macs3'], vcf] 
-            }
-        )
+            })
     }
 
+
     // Prepare channel for GATK/FreeBayes
-    ch_vcall = ch_peaks.map { meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
+    ch_vcall = ch_joined.map { meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
         [meta, treat_bams, treat_bais]
     }
     ch_dict = Channel.fromPath(params.GENOME_DICT, checkIfExists: true)

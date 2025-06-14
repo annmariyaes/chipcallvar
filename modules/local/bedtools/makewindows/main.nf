@@ -16,15 +16,13 @@ process CREATE_INTERVALS_BED {
     path fai
 
     output:
-    path "genome_chunks_*.bed", emit: intervals
+    path "genome_chunks.list", emit: intervals
     path "genome_chunks.bed", emit: bed_intervals
 
     script:
     """
-    # bedtools makewindows -g ${fai} -w ${params.WINDOW_SIZE} > genome_chunks.bed
-    awk -v FS="\t" -v OFS="\t" '{print \$1 FS "0" FS (\$2-1)}' ${fai} > genome_chunks.bed
-    # Split using awk (more portable)
-    awk '{print > "genome_chunks_" NR ".bed"}' genome_chunks.bed
-
+    bedtools makewindows -g ${fai} -w ${params.WINDOW_SIZE} > genome_chunks.bed
+    # Convert to interval format (1-based coordinates)
+    awk 'BEGIN{OFS=""} {print \$1, ":", \$2+1, "-", \$3}' genome_chunks.bed > genome_chunks.list
     """
 }

@@ -15,7 +15,7 @@ process MACS3_CALLPEAK {
     tuple val(meta), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
     
     output:
-    tuple val(meta), path("${meta.patient}_peaks.narrowPeak"), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais), emit: peaks
+    tuple val(meta), path("${meta.patient}_peaks.narrowPeak"), emit: peaks
     tuple val(meta), path("${meta.patient}_peaks.xls"), path("${meta.patient}_summits.bed"), emit: peak_stats
 
     script:

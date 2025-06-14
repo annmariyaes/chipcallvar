@@ -14,6 +14,7 @@ workflow PEAK_CALLING {
     main:
 
     // Treatment samples (ChIP samples) - samples without control specified
+    if (params.tools && params.tools.split(',').contains('macs3')) {
     ch_treatment = ch_bam
         .filter { meta, bam, bai -> 
             !meta.containsKey('control') || 
@@ -48,10 +49,14 @@ workflow PEAK_CALLING {
                 [updated_meta, treat_bam, treat_bai, ctrl_bam, ctrl_bai]
             }
         }
-    
+
     // Run MACS3 callpeak
     callpeak = MACS3_CALLPEAK(ch_joined)
-    
+    }
+    else {
+        callpeak = [peaks: Channel.empty(), peak_stats: Channel.empty()]
+    }
+
     emit:
     peaks = callpeak.peaks
     stats = callpeak.peak_stats
