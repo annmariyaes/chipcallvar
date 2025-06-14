@@ -22,7 +22,7 @@ The pipeline integrates the following tools:
 - Optional MAF conversion – `vcf2maf`, `maftools`
 - Quality control and reporting – `FastQC`, `Samtools`, `Mosdepth`, `bcftools`, `Ensembl VEP`, summarized with `MultiQC`
 
-![Workflow](https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74)
+![Workflow](./workflow.png)
 
 
 To speed up variant calling, the reference genome is split into smaller **genomic intervals** using `bedtools`. Each interval is processed in parallel, and the resulting VCF files are merged. This significantly reduces the total wall-clock time and optimizes the use of compute resources.
