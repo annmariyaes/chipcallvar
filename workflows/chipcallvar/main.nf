@@ -34,7 +34,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
 
     // fai file for interval
     ch_fai = Channel.fromPath(params.GENOME_FAI, checkIfExists: true)
-    // PRE_PROCESSING(ch_fai)
+    PRE_PROCESSING(ch_fai)
     ch_interval = Channel.fromPath(params.INTERVALS, checkIfExists: true)
 
     PEAK_CALLING(ALIGN_AND_PROCESS.out.merged)

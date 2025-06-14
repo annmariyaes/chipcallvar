@@ -98,6 +98,7 @@ println """
 \033[1;36m  Fasta index       :\033[0m ${params.GENOME_FAI}
 \033[1;36m  Genome dictionary :\033[0m ${params.GENOME_DICT}
 \033[1;36m  Genome Assembly   :\033[0m ${params.ASSEMBLY}
+\033[1;36m  Target bed        :\033[0m ${params.INTERVALS}
 \033[1;36m  Panel of Normals  :\033[0m ${params.PON}
 \033[1;36m  Germline database :\033[0m ${params.GNOMAD}
 \033[1;36m  Variant callers   :\033[0m ${params.tools}

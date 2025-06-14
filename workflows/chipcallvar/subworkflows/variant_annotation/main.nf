@@ -29,7 +29,7 @@ workflow VARIANT_ANNOTATION {
 
     if (params.tools && params.tools.split(',').contains('macs3')) {
         vep_macs3 = ENSEMBL_VEP_MACS3(ch_branched.macs3, 'macs3')
-        head = BCFTOOLS_REHEADER(vep_macs3.vcf, 'macs3')
+        head = BCFTOOLS_REHEADER_MACS3(vep_macs3.vcf, 'macs3')
         ch_vcf = ch_vcf.mix(head.vcf)
         ch_vep_stats = ch_vep_stats.mix(vep_macs3.vep_stats)
     }

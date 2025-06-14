@@ -44,16 +44,16 @@ OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,t
 
 #### ⚙️ Parameters File 
 ```yaml {params.yaml}
-samplesheet: './samplesheet_example.csv'
-outdir: "./nf-macs3"
-fasta: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
-fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
-dict: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.dict'
-assembly: 'GRCh38'
-genome_size: 'hs'
+OUTDIR: './results'
+SAMPLESHEET: './samplesheet_example.csv'
 step: 'mapping'
 tools: 'macs3,mutect2,freebayes'
 email: 'example@gmail.com'
+genome: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
+fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
+dict: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.dict'
+intervals: './peaks.bed'
+assembly: 'GRCh38'
 ```
 
 ### 🚀 Running the Pipeline

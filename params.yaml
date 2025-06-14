@@ -1,14 +1,14 @@
 OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-macs3'
+SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example.csv'
+step: 'mapping'
+tools: 'mutect2,freebayes'
 email: 'annmariya.elayani@gmail.com'
-# GENOME: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
+
+# genome: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
 # fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
 # dict: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.dict'
-ASSEMBLY: 'GRCh38'
-GENOME_SIZE: 'hs'
-SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example.csv'
-
-step: 'mapping'
-tools: 'macs3,mutect2,freebayes'
+# intervals:'/storage/projects/P024_ChIPseq_AE/beds/all_H3K27Ac_peaks.bed'
+# assembly: 'GRCh38'
 
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_merged.csv"
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_intermediate.csv"
