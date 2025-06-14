@@ -1,32 +1,42 @@
-# chipcallvar
+# 🔬 chipcallvar
 
-**chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow to call variants (SNVs and INDELs) on ChIP-seq data.
-There are 3 different variant callers in this pipeline: [macs3 callvar](https://macs3-project.github.io/MACS/docs/callvar.html), [GATK mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2), [freebayes](https://github.com/freebayes/freebayes)
+**chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow for calling **somatic variants (SNVs and INDELs)** from **ChIP-seq data**. It supports multiple variant calling tools and is designed for parallel execution, high customizability, and scalability on HPC or cloud environments.
 
-To speed up the variant calling processes, the reference is chopped into smaller pieces. The variant calling is done by this intervals, and the different resulting VCFs are then merged. This can parallelize the variant calling processes, and push down the variant calling wall clock time significantly.
+The pipeline integrates the following tools:
+
+- 🧬 [**MACS3 `callvar`**](https://macs3-project.github.io/MACS/docs/callvar.html): peak-aware variant caller optimized for ChIP-seq data
+- 🧬 [**GATK `Mutect2`**](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): industry-standard somatic SNV/INDEL caller
+- 🧬 [**FreeBayes**](https://github.com/freebayes/freebayes): haplotype-based variant detection
+
+---
 
 ## 🧬 Workflow Overview
 
-This pipeline performs the following steps:
+- ✅ **Read alignment and deduplication** – `bwa-mem2`, `samtools`
+- 🔗 **Merging technical replicates** – `samtools merge`
+- 🪓 **Interval creation** – `bedtools makewindows`
+- 📈 **Peak calling** – `macs3 callpeak`
+- 🔬 **Variant calling** – `macs3 callvar`, `GATK Mutect2`, `FreeBayes`
+- 🧬 **Variant annotation** – `Ensembl VEP`
+- 🧼 **Filtering and reheadering** – `bcftools`
+- 📊 **Optional MAF conversion** – `vcf2maf`, `maftools`
+- 📉 **Quality control and reporting** – `FastQC`, `Samtools`, `Mosdepth`, `bcftools`, `Ensembl VEP`, summarized with `MultiQC`
 
-1. **Read mapping** – `bwa-mem2`
-2. **Merging technical duplicates** – `samtools`
-3. **Create intervals** - `bedtools`
-4. **Peak calling** – `macs3 callpeak`
-5. **Variant calling** – `macs3 callvar, GATK mutect2, freebayes`
-6. **Variant annotation** – Ensembl `vep`
-7. **Variant filtering** – `bcftools`
-8. **Downstream analysis** – `vcf2maf, maftools`
-8. **MultiQC** - `fastqc`, `samtools`, `mosdepth`, `bcftools`, `ensembl vep`
+![Workflow](https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74)
 
-<img width="1340" alt="workflow" src="https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74" />
+---
 
+## ⚡ Parallelized Variant Calling
 
-## Usage
+To speed up variant calling, the reference genome is split into smaller **genomic intervals** using `bedtools`. Each interval is processed in parallel, and the resulting VCF files are merged. This significantly reduces the total wall-clock time and optimizes the use of compute resources.
 
-### 📂 Input: Sample Sheet
+---
 
-Each row represents a pair of fastq files (paired end). Prepare a CSV file (`samplesheet.csv`) with the following format:
+## 📥 Input
+
+### Sample Sheet (`samplesheet.csv`)
+
+Each row describes one replicate of a ChIP-seq experiment. The input format is:
 
 ```csv
 patient,sample,replicate,fastq_1,fastq_2,control,control_replicate
@@ -57,6 +67,7 @@ nextflow run main.nf \
    -resume
 ```
 
+---
 
 ## 👩‍💻 Author
 
