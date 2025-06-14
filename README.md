@@ -4,37 +4,34 @@
 
 The pipeline integrates the following tools:
 
-🧬 [**MACS3 `callvar`**](https://macs3-project.github.io/MACS/docs/callvar.html): peak-aware variant caller optimized for ChIP-seq data
-🧬 [**GATK `Mutect2`**](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): industry-standard somatic SNV/INDEL caller
-🧬 [**FreeBayes**](https://github.com/freebayes/freebayes): haplotype-based variant detection
+🧬 [MACS3 `callvar`](https://macs3-project.github.io/MACS/docs/callvar.html): peak-aware variant caller optimized for ChIP-seq data
+🧬 [GATK `Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): industry-standard somatic SNV/INDEL caller
+🧬 [FreeBayes](https://github.com/freebayes/freebayes): haplotype-based variant detection
 
----
 
-## 🧬 Workflow Overview
 
-- **Read alignment and deduplication** – `bwa-mem2`, `samtools`
-- **Merging technical replicates** – `samtools merge`
-- **Interval creation** – `bedtools makewindows`
-- **Peak calling** – `macs3 callpeak`
-- **Variant calling** – `macs3 callvar`, `GATK Mutect2`, `FreeBayes`
-- **Variant annotation** – `Ensembl VEP`
-- **Filtering and reheadering** – `bcftools`
-- **Optional MAF conversion** – `vcf2maf`, `maftools`
-- **Quality control and reporting** – `FastQC`, `Samtools`, `Mosdepth`, `bcftools`, `Ensembl VEP`, summarized with `MultiQC`
+### 🧬 Workflow Overview
+
+- Read alignment and deduplication – `bwa-mem2`, `samtools`
+- Merging technical replicates – `samtools merge`
+- Interval creation – `bedtools makewindows`
+- Peak calling – `macs3 callpeak`
+- Variant calling – `macs3 callvar`, `GATK Mutect2`, `FreeBayes`
+- Variant annotation – `Ensembl VEP`
+- Filtering and reheadering – `bcftools`
+- Optional MAF conversion – `vcf2maf`, `maftools`
+- Quality control and reporting – `FastQC`, `Samtools`, `Mosdepth`, `bcftools`, `Ensembl VEP`, summarized with `MultiQC`
 
 ![Workflow](https://github.com/user-attachments/assets/a1821c20-c71e-4d9f-ba12-5c5abc14fe74)
 
----
-
-## ⚡ Parallelized Variant Calling
 
 To speed up variant calling, the reference genome is split into smaller **genomic intervals** using `bedtools`. Each interval is processed in parallel, and the resulting VCF files are merged. This significantly reduces the total wall-clock time and optimizes the use of compute resources.
 
 ---
 
-## 📥 Input
+### 📥 Input
 
-### Sample Sheet (`samplesheet.csv`)
+#### Sample Sheet (`samplesheet.csv`)
 
 Each row describes one replicate of a ChIP-seq experiment. The input format is:
 
@@ -45,7 +42,7 @@ OCI-AML3,OCI-AML3_H3K27ac,1,test/hs_ChIP_OCI-AML3_rep1_H3K27ac_R1_001.fastq.gz,t
 OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
 ```
 
-### ⚙️ Parameters File (params.yaml)
+#### ⚙️ Parameters File (params.yaml)
 ```yaml
 samplesheet: './samplesheet_example.csv'
 outdir: "./nf-macs3"
