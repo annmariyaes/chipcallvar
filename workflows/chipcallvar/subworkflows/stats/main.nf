@@ -29,38 +29,32 @@ workflow BAM_STATS {
 workflow VCF_STATS {
     take:
     ch_vep
-
+    
     main:
-    ch_vep.view()
+    // Branch the input channel based on tools
+    ch_branched = ch_vep.branch { meta, vcf ->
+        macs3: params.tools?.split(',')?.contains('macs3')
+        mutect2: params.tools?.split(',')?.contains('mutect2') 
+        freebayes: params.tools?.split(',')?.contains('freebayes')
+    }
+    
     ch_vcf_stats = Channel.empty()
-
-    if (params.tools && params.tools.split(',').contains('macs3')) {
-        BCFTOOLS_STATS_MACS3(ch_vep, 'macs3')
-        ch_vcf_stats = ch_vcf_stats.mix(
-            BCFTOOLS_STATS_MACS3.out.vcf_stats.map { meta, stats -> 
-                [meta + [caller: 'macs3'], stats] 
-            }
-        )
+    
+    if (params.tools?.split(',')?.contains('macs3')) {
+        BCFTOOLS_STATS_MACS3(ch_branched.macs3, 'macs3')
+        ch_vcf_stats = ch_vcf_stats.mix(BCFTOOLS_STATS_MACS3.out.vcf_stats)
     }
-
-    if (params.tools && params.tools.split(',').contains('mutect2')) {
-        BCFTOOLS_STATS_MUTECT2(ch_vep, 'mutect2')
-        ch_vcf_stats = ch_vcf_stats.mix(
-            BCFTOOLS_STATS_MUTECT2.out.vcf_stats.map { meta, stats -> 
-                [meta + [caller: 'mutect2'], stats] 
-            }
-        )
+    
+    if (params.tools?.split(',')?.contains('mutect2')) {
+        BCFTOOLS_STATS_MUTECT2(ch_branched.mutect2, 'mutect2')
+        ch_vcf_stats = ch_vcf_stats.mix(BCFTOOLS_STATS_MUTECT2.out.vcf_stats)
     }
-
-    if (params.tools && params.tools.split(',').contains('freebayes')) {
-        BCFTOOLS_STATS_FREEBAYES(ch_vep, 'freebayes')
-        ch_vcf_stats = ch_vcf_stats.mix(
-            BCFTOOLS_STATS_FREEBAYES.out.vcf_stats.map { meta, stats -> 
-                [meta + [caller: 'freebayes'], stats] 
-            }
-        )
+    
+    if (params.tools?.split(',')?.contains('freebayes')) {
+        BCFTOOLS_STATS_FREEBAYES(ch_branched.freebayes, 'freebayes')
+        ch_vcf_stats = ch_vcf_stats.mix(BCFTOOLS_STATS_FREEBAYES.out.vcf_stats)
     }
-
+    
     emit:
     vcf_stats = ch_vcf_stats
 }

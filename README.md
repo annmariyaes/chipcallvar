@@ -1,4 +1,4 @@
-# 🔬 chipcallvar
+# 🧬 chipcallvar
 
 **chipcallvar** is a reproducible [Nextflow](https://www.nextflow.io/) workflow for calling **somatic variants (SNVs and INDELs)** from **ChIP-seq data**. It supports multiple variant calling tools and is designed for parallel execution, high customizability, and scalability on HPC or cloud environments.
 
@@ -10,7 +10,7 @@ The pipeline integrates the following tools:
 
 
 
-### 🧬 Workflow Overview
+### Workflow Overview
 
 - Read alignment and deduplication – `bwa-mem2`, `samtools`
 - Merging technical replicates – `samtools merge`
