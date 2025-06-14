@@ -31,6 +31,7 @@ workflow VCF_STATS {
     ch_vep
 
     main:
+    ch_vep.view()
     ch_vcf_stats = Channel.empty()
 
     if (params.tools && params.tools.split(',').contains('macs3')) {

@@ -13,7 +13,7 @@ process MULTIQC {
     path(fastqc_files)
     path(samtools_files)
     path(mosdepth_files)
-    path(bcftools_files)
+    // path(bcftools_files)
     path(vep_files)
     path(config_file)
     
