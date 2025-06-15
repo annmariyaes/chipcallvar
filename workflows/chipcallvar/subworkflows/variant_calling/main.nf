@@ -6,7 +6,7 @@
 
 
 include { MACS3_CALLVAR } from '../../../../modules/local/macs3/callvar'
-include { GATK_MUTECT2 } from '../../../../modules/local/mutect2'
+include { GATK_MUTECT2 } from '../../../../modules/local/gatk/mutect2'
 include { FREEBAYES } from '../../../../modules/local/freebayes'
 include { BCFTOOLS_CONCAT as BCFTOOLS_CONCAT_MACS3 } from '../../../../modules/local/bcftools/concat'
 include { BCFTOOLS_CONCAT as BCFTOOLS_CONCAT_MUTECT2 } from '../../../../modules/local/bcftools/concat'
@@ -20,6 +20,7 @@ workflow VARIANT_CALLING {
     ch_peaks
     ch_index
     ch_interval
+    ch_dict
 
     main:
     ch_vcf = Channel.empty()
@@ -91,10 +92,9 @@ workflow VARIANT_CALLING {
 
 
     // Prepare channel for GATK/FreeBayes
-    ch_vcall = ch_joined.map { meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
-        [meta, treat_bams, treat_bais]
+    ch_vcall = ch_callvar.map { meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
+        [meta, peaks, treat_bams, treat_bais]
     }
-    ch_dict = Channel.fromPath(params.GENOME_DICT, checkIfExists: true)
     ch_indexes = ch_index.combine(ch_dict)
     ch_combined = ch_vcall.combine(ch_indexes).combine(ch_interval)
 
