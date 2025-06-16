@@ -12,7 +12,18 @@ caller_name <- args[3]
 # Libraries
 suppressMessages(library(maftools))
 
-aml = read.maf(maf = input_maf_directory,vc_nonSyn = FALSE)
+# Define variant classes of interest
+interest <- c("3'Flank", "3'UTR", "5'Flank", "5'UTR", "IGR", "Intron", "RNA",
+              "Silent", "Splice_Region", "Splice_Site", "Targeted_Region",
+              "Translation_Start_Site", "Unknown")
+
+# Load and merge MAF files
+maf_files <- list.files(input_maf_directory, pattern = ".vep.maf", full.names = TRUE, recursive = TRUE)
+print(length(maf_files))
+maf_list <- lapply(maf_files, read.maf, vc_nonSyn = FALSE)
+names(maf_list) <- basename(dirname(maf_files))
+aml <- merge_mafs(maf_list, vc_nonSyn = FALSE)
+
 
 # Output plots
 save_and_show_plot <- function(plot_func, filename, ...) {

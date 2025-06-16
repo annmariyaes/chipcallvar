@@ -16,7 +16,7 @@ workflow MAF_PROCESSING {
     vcf2maf = VCF2MAF(ch_vcf)
     
     ch_maf = vcf2maf.maf.map { meta, maf ->
-        [meta, maf]
+        [meta, maf.parent]
     }.view { it -> "$it" }
 
     r_script = file("${projectDir}/bin/variant_calling.R")
