@@ -7,13 +7,13 @@
 
 process VCF2MAF {
     tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/mafs_annotated/${meta.patient}", mode: 'copy'
+    publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.patient}", mode: 'copy'
     
     input:
     tuple val(meta), path(vcf)
     
     output:
-    tuple val(meta), path("${meta.patient}.macs3.vep.maf"), emit: maf
+    tuple val(meta), path("${meta.patient}.${meta.caller}.vep.maf"), emit: maf
     
     script:
     """
@@ -23,7 +23,7 @@ process VCF2MAF {
     # Run vcf2maf
     perl /storage/tools/vcf2maf_v1.6.22/mskcc-vcf2maf-f6d0c40/vcf2maf.pl \
         --input-vcf ${meta.patient}.vcf \
-        --output-maf ${meta.patient}.macs3.vep.maf \
+        --output-maf ${meta.patient}.${meta.caller}.vep.maf \
         --tumor-id ${meta.patient} \
         --ref-fasta ${params.REFERENCE_GENOME} \
         --vep-data ${params.VEP_CACHE} \

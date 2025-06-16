@@ -7,7 +7,7 @@
 
 process MAFTOOLS {
     tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/plots", mode: 'copy'
+    publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.patient}", mode: 'copy'
     container "${params.MAFTOOLS_CONTAINER}"
 
     input:

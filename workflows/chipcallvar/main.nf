@@ -32,11 +32,10 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     ALIGN_AND_PROCESS(ch_input, PREPARE_GENOME.out.index)
     BAM_STATS(ALIGN_AND_PROCESS.out.merged)
 
-    // fai file for interval
     ch_fai = Channel.fromPath(params.GENOME_FAI, checkIfExists: true)
+    PRE_PROCESSING(ch_reference, ch_fai)
 
     PEAK_CALLING(ALIGN_AND_PROCESS.out.merged)
-    PRE_PROCESSING(ch_reference, ch_fai)
     VARIANT_CALLING(ALIGN_AND_PROCESS.out.merged, PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index, PRE_PROCESSING.out.intervals, PRE_PROCESSING.out.dict)
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
     VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)

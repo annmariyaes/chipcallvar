@@ -14,7 +14,7 @@ process GATK_MUTECT2 {
     tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(reference), path("*"), path(dict), path(intervals) 
 
     output:
-    tuple val(meta), path("${meta.patient}.${interval}.mutect2.vcf.gz"), emit: vcf
+    tuple val(meta), path("${meta.patient}.mutect2.vcf.gz"), emit: vcf
 
     script:
     interval = intervals.baseName
@@ -28,6 +28,7 @@ process GATK_MUTECT2 {
         --germline-resource ${params.GNOMAD} \
         --panel-of-normals ${params.PON} \
         --sequence-dictionary ${dict} \
-        -O ${meta.patient}.${interval}.mutect2.vcf.gz
+        --intervals ${meta.patient}.bed \
+        -O ${meta.patient}.mutect2.vcf.gz
     """
 }
