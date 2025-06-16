@@ -13,7 +13,7 @@ process VCF2MAF {
     tuple val(meta), path(vcf)
     
     output:
-    tuple val(meta), path("${meta.patient}.macs3.vep.maf.gz"), emit: maf
+    tuple val(meta), path("${meta.patient}.macs3.vep.maf"), emit: maf
     
     script:
     """
@@ -35,6 +35,6 @@ process VCF2MAF {
         --inhibit-vep
     
     # Compress the maf file
-    gzip ${meta.patient}.macs3.vep.maf
+    # gzip ${meta.patient}.macs3.vep.maf
     """
 }

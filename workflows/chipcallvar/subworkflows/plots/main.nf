@@ -15,15 +15,16 @@ workflow MAF_PROCESSING {
     main:
     vcf2maf = VCF2MAF(ch_vcf)
     
-    ch_maf_dir = vcf2maf.maf.map { meta, maf_file ->
-        [meta, maf_file.parent]
-    }
+    ch_maf_dir = vcf2maf.maf.map { meta, maf ->
+        [meta, maf.parent]
+    }.view()
 
     r_script = file("${projectDir}/bin/variant_calling.R")
-    // MAFTOOLS(ch_maf_dir, r_script)
+    MAFTOOLS(ch_maf_dir, r_script)
     
     emit:
-    maf = vcf2maf.maf  // [ meta, maf ]
+    maf   = vcf2maf.maf  // [ meta, maf ]
+    plots = MAFTOOLS.out.plots
 }
 
 

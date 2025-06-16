@@ -105,9 +105,8 @@ workflow VARIANT_CALLING {
             .groupTuple(by: 0)
             .map { meta, vcfs -> [meta, vcfs.sort()] }
 
-        BCFTOOLS_CONCAT_MUTECT2(ch_mutect2_grouped, 'mutect2')
         ch_vcf = ch_vcf.mix(
-            BCFTOOLS_CONCAT_MUTECT2.out.vcf.map { meta, vcf -> 
+            GATK_MUTECT2.out.vcf.map { meta, vcf -> 
                 [meta + [caller: 'mutect2'], vcf] 
             }
         )
@@ -120,9 +119,8 @@ workflow VARIANT_CALLING {
             .groupTuple(by: 0)
             .map { meta, vcfs -> [meta, vcfs.sort()] }
 
-        BCFTOOLS_CONCAT_FREEBAYES(ch_freebayes_grouped, 'freebayes')
         ch_vcf = ch_vcf.mix(
-            BCFTOOLS_CONCAT_FREEBAYES.out.vcf.map { meta, vcf -> 
+            FREEBAYES.out.vcf.map { meta, vcf -> 
                 [meta + [caller: 'freebayes'], vcf] 
             }
         )

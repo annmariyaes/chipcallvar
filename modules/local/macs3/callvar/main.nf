@@ -14,18 +14,18 @@ process MACS3_CALLVAR {
     tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais), path(intervals)
     
     output:
-    tuple val(meta), path("${meta.patient}.macs3.vcf"), emit: vcf
+    tuple val(meta), path("${meta.patient}_${interval_name}.macs3.vcf"), emit: vcf
     
     script:
     interval_name = intervals.baseName
     def ctrl_flag = ctrl_bams ? "--control $ctrl_bams" : ''
     """
     macs3 callvar \
-            --peak ${peaks} \
-            --treatment ${treat_bams} \
-            ${ctrl_flag} \
-            --multiple-processing ${task.cpus} \
-            --outdir . \
-            --ofile ${meta.patient}.macs3.vcf
+        --peak ${peaks} \
+        --treatment ${treat_bams} \
+        ${ctrl_flag} \
+        --multiple-processing ${task.cpus} \
+        --outdir . \
+        --ofile ${meta.patient}_${interval_name}.macs3.vcf \
     """
 }

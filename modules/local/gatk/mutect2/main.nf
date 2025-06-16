@@ -28,7 +28,6 @@ process GATK_MUTECT2 {
         --germline-resource ${params.GNOMAD} \
         --panel-of-normals ${params.PON} \
         --sequence-dictionary ${dict} \
-        --intervals ${meta.patient}.bed \
         -O ${meta.patient}.${interval}.mutect2.vcf.gz
     """
 }
