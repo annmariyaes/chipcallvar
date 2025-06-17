@@ -20,9 +20,9 @@ interest <- c("3'Flank", "3'UTR", "5'Flank", "5'UTR", "IGR", "Intron", "RNA",
 # Load and merge MAF files
 maf_files <- list.files(input_maf_directory, pattern = ".vep.maf", full.names = TRUE, recursive = TRUE)
 print(length(maf_files))
-maf_list <- lapply(maf_files, read.maf, vc_nonSyn = FALSE)
+maf_list <- lapply(maf_files, read.maf, vc_nonSyn = interest)
 names(maf_list) <- basename(dirname(maf_files))
-aml <- merge_mafs(maf_list, vc_nonSyn = FALSE)
+aml <- merge_mafs(maf_list, vc_nonSyn = interest)
 
 
 # Output plots
@@ -33,16 +33,12 @@ save_and_show_plot <- function(plot_func, filename, ...) {
   plot_func(...)  # optional if you want to show it in interactive mode
 }
 
-out_prefix <- paste0(sample_id, "_", caller_name)
+out_prefix <- paste0(sample_id, ".", caller_name)
 save_and_show_plot(plot_func = oncoplot,
-                   filename = paste0(out_prefix, "_waterfallplot.png"),
+                   filename = paste0(out_prefix, ".waterfallplot.png"),
                    maf = aml, top = 15, legendFontSize = 0.8,
                    fontSize = 0.6, gene_mar = 8, showTumorSampleBarcodes = TRUE)
 
 save_and_show_plot(plot_func = plotmafSummary,
-                   filename = paste0(out_prefix, "_mafSummary.png"),
+                   filename = paste0(out_prefix, ".mafSummary.png"),
                    maf = aml, rmOutlier = TRUE, addStat = 'mean', dashboard = TRUE, titvRaw = TRUE)
-
-save_and_show_plot(plot_func = tcgaCompare,
-                   filename = paste0(out_prefix, "_tcgaCompare.png"),
-                   maf = aml, cohortName = "AML")

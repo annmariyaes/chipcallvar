@@ -17,14 +17,15 @@ workflow MAF_PROCESSING {
     
     ch_maf = vcf2maf.maf.map { meta, maf ->
         [meta, maf.parent]
-    }.view { it -> "$it" }
+    }
+    // .view { it -> "$it" }
 
-    r_script = file("${projectDir}/bin/variant_calling.R")
+    r_script = file("${projectDir}/bin/maftools_plotting.R")
     MAFTOOLS(ch_maf, r_script)
     
     emit:
     maf   = vcf2maf.maf  // [ meta, maf ]
-    plots = MAFTOOLS.out.plots
+    plots = MAFTOOLS.out.plots // waterfall and summary plots
 }
 
 
