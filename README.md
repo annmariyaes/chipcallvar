@@ -12,7 +12,7 @@ The pipeline integrates the following tools:
 
 ### Workflow Overview
 
-- Read alignment and deduplication – `bwa-mem2`, `samtools`
+- Read alignment – `bwa-mem2`, `samtools`
 - Merging technical replicates – `samtools merge`
 - Interval creation – `bedtools`
 - Peak calling – `macs3 callpeak`
@@ -51,8 +51,6 @@ tools: 'macs3,mutect2,freebayes'
 email: 'example@gmail.com'
 genome: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
 fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
-dict: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.dict'
-intervals: './peaks.bed'
 assembly: 'GRCh38'
 ```
 

@@ -20,8 +20,12 @@ process MACS3_CALLVAR {
     interval_name = intervals.baseName
     def ctrl_flag = ctrl_bams ? "--control $ctrl_bams" : ''
     """
+    # create target bed file from peaks
+    cut -f1-3 ${peaks} > ${meta.patient}.peaks.bed
+    sort -k1,1 -k2,2n ${meta.patient}.peaks.bed > ${meta.patient}.sorted.peaks.bed
+    # variant calling
     macs3 callvar \
-        --peak ${peaks} \
+        --peak ${meta.patient}.sorted.peaks.bed \
         --treatment ${treat_bams} \
         ${ctrl_flag} \
         --multiple-processing ${task.cpus} \
