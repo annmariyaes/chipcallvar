@@ -1,12 +1,12 @@
-OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-test'
-SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example2.csv'
-step: 'mapping'
-tools: 'macs3,mutect2,freebayes'
+OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-macs3-merged'
+# SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example2.csv'
+step: 'annotate'
+tools: 'macs3'
 email: 'annmariya.elayani@gmail.com'
 # genome: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
 # fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
 # assembly: 'GRCh38'
 
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_merged.csv"
-# SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_intermediate.csv"
+SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_intermediate.csv"
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_cell-lines.csv"

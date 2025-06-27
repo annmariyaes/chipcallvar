@@ -115,7 +115,7 @@ workflow CHIP_SEQ_VCF_VARIANT_ANNOTATION {
     take: ch_input
 
     main:
-    VCF_STATS(ch_input)
+    // VCF_STATS(ch_input)
     VARIANT_ANNOTATION(ch_input)
     VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
 
@@ -123,17 +123,8 @@ workflow CHIP_SEQ_VCF_VARIANT_ANNOTATION {
     MAF_PROCESSING(VARIANT_FILTERING.out.vcf)
 
     ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)
-    MULTIQC(
-        QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
-        BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
-        BAM_STATS.out.bam_stats2.map { it[1] }.collect(),
-        VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
-        VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
-        ch_multiqc_config
-        )
 
     emit:
     vcf_out = VARIANT_FILTERING.out.vcf
     maf_out = MAF_PROCESSING.out.maf
-    multiqc_html = MULTIQC.out.html
 }

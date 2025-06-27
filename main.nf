@@ -73,7 +73,10 @@ workflow CHIPCALLVAR {
             .splitCsv(header: true)
             .filter { row -> row.vcf && file(row.vcf).exists() }
             .map { row ->
-                def meta = [ id: row.sample ]
+                def meta = [ 
+                             id: row.sample, 
+                             patient: row.patient,
+                             caller: row.caller ]
                 [ meta, file(row.vcf) ]
             }
             // .view { it -> "$it" }

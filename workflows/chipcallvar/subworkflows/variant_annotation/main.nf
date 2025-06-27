@@ -26,7 +26,7 @@ workflow VARIANT_ANNOTATION {
         freebayes: it[0].caller == 'freebayes'
         other: true // catch any untagged VCFs
     }.set { ch_branched }
-
+    
     if (params.tools && params.tools.split(',').contains('macs3')) {
         vep_macs3 = ENSEMBL_VEP_MACS3(ch_branched.macs3, 'macs3')
         head = BCFTOOLS_REHEADER_MACS3(vep_macs3.vcf, 'macs3')
