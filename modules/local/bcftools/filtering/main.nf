@@ -7,8 +7,8 @@
 
 
 process BCFTOOLS {
-    tag "$meta.patient"
-    publishDir "${params.OUTDIR}/annotation/${caller}/${meta.patient}", mode: 'copy'
+    tag "$meta.id"
+    publishDir "${params.OUTDIR}/annotation/${caller}/${meta.id}", mode: 'copy'
     container "${params.BCFTOOLS_CONTAINER}"
     
     input:
@@ -16,11 +16,11 @@ process BCFTOOLS {
     val caller
     
     output:
-    tuple val(meta), path("${meta.patient}.${caller}.filtered.vcf.gz"), emit: vcf
-    tuple val(meta), path("${meta.patient}.${caller}.filtered.vcf.gz.tbi"), emit: vcf_tbi
+    tuple val(meta), path("${meta.id}.${caller}.filtered.vcf.gz"), emit: vcf
+    tuple val(meta), path("${meta.id}.${caller}.filtered.vcf.gz.tbi"), emit: vcf_tbi
     
     script:
-    def prefix = "${meta.patient}.${caller}"
+    def prefix = "${meta.id}.${caller}"
     def filled_vcf = "${prefix}_filled.vcf.gz"
     def filtered_vcf = "${prefix}.filtered.vcf.gz"
     

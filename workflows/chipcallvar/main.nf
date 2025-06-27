@@ -115,14 +115,10 @@ workflow CHIP_SEQ_VCF_VARIANT_ANNOTATION {
     take: ch_input
 
     main:
-    // VCF_STATS(ch_input)
     VARIANT_ANNOTATION(ch_input)
     VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
-
     VCF_STATS(VARIANT_FILTERING.out.vcf)
     MAF_PROCESSING(VARIANT_FILTERING.out.vcf)
-
-    ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)
 
     emit:
     vcf_out = VARIANT_FILTERING.out.vcf

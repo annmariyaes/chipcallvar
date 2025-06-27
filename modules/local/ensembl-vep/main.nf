@@ -6,8 +6,8 @@
 
 
 process ENSEMBL_VEP {
-    tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/annotation/${caller}/${meta.patient}", mode: 'copy'
+    tag "${meta.id}"
+    publishDir "${params.OUTDIR}/annotation/${caller}/${meta.id}", mode: 'copy'
     container "${params.VEP_CONTAINER}" 
 
     input:
@@ -15,15 +15,15 @@ process ENSEMBL_VEP {
     val caller
 
     output:
-    tuple val(meta), path("${meta.patient}.${caller}.vep.vcf"), emit: vcf
-    tuple val(meta), path("${meta.patient}.${caller}.vep.summary.html"), emit: vep_stats
+    tuple val(meta), path("${meta.id}.${caller}.vep.vcf"), emit: vcf
+    tuple val(meta), path("${meta.id}.${caller}.vep.summary.html"), emit: vep_stats
     
     script:
     """
     # Run VEP with optimized parameters
     vep \
         -i ${vcf} \
-        -o ${meta.patient}.${caller}.vep.vcf \
+        -o ${meta.id}.${caller}.vep.vcf \
         --cache \
         --everything \
         --check_existing \
@@ -32,7 +32,7 @@ process ENSEMBL_VEP {
         --fork ${task.cpus} \
         --buffer_size 10000 \
         --stats_html \
-        --stats_file ${meta.patient}.${caller}.vep.summary.html \
+        --stats_file ${meta.id}.${caller}.vep.summary.html \
         --verbose  
     """
 }
