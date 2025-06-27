@@ -78,7 +78,7 @@ process BCFTOOLS_REHEADER {
     tabix -p vcf ${meta.id}.${caller}.vep.filled.vcf.gz
     
     # Cleanup
-    rm header.txt ${meta.id}.AD.values.txt.gz ${meta.id}.AD.values.txt.gz.tbi ${meta.id}.SB.values.txt.gz ${meta.id}.SB.values.txt.gz.tbi ${meta.id}.reheader.vcf ${meta.id}.with.ad.vcf ${meta.id}.with.sb.vcf
+    # rm header.txt ${meta.id}.AD.values.txt.gz ${meta.id}.AD.values.txt.gz.tbi ${meta.id}.SB.values.txt.gz ${meta.id}.SB.values.txt.gz.tbi ${meta.id}.reheader.vcf ${meta.id}.with.ad.vcf ${meta.id}.with.sb.vcf
     """
 }
 

@@ -6,26 +6,26 @@
 
 
 process VCF2MAF {
-    tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.patient}", mode: 'copy'
+    tag "${meta.id}"
+    publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.id}", mode: 'copy'
     container "${params.VCF2MAF_CONTAINER}"
 
     input:
     tuple val(meta), path(vcf)
     
     output:
-    tuple val(meta), path("${meta.patient}.${meta.caller}.vep.maf"), emit: maf
+    tuple val(meta), path("${meta.id}.${meta.caller}.vep.maf"), emit: maf
     
     script:
     """
     # Uncompress the vcf file
-    bgzip -c -d ${vcf} > ${meta.patient}.vcf
+    bgzip -c -d ${vcf} > ${meta.id}.vcf
     
     # Run vcf2maf
     vcf2maf.pl \
-        --input-vcf ${meta.patient}.vcf \
-        --output-maf ${meta.patient}.${meta.caller}.vep.maf \
-        --tumor-id ${meta.patient} \
+        --input-vcf ${meta.id}.vcf \
+        --output-maf ${meta.id}.${meta.caller}.vep.maf \
+        --tumor-id ${meta.id} \
         --ref-fasta ${params.REFERENCE_GENOME} \
         --vep-data ${params.VEP_CACHE} \
         --vep-path ${params.VEP_PATH} \

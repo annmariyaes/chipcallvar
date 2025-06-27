@@ -6,8 +6,8 @@
 
 
 process MAFTOOLS {
-    tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.patient}", mode: 'copy'
+    tag "${meta.id}"
+    publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.id}", mode: 'copy'
     container "${params.MAFTOOLS_CONTAINER}"
 
     input:
@@ -23,6 +23,6 @@ process MAFTOOLS {
     set -euo pipefail
 
     # Run the R script with proper arguments
-    Rscript ${r_script} ${maf_dir} ${meta.patient} ${meta.caller}
+    Rscript ${r_script} ${maf_dir} ${meta.id} ${meta.caller}
     """
 }

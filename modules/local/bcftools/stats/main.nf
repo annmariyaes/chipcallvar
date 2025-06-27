@@ -5,7 +5,7 @@
 */
 
 process BCFTOOLS_STATS {
-    tag "${meta.patient}"
+    tag "${meta.id}"
     publishDir "${params.OUTDIR}/multiqc/${caller}", mode: 'copy'
 
     input:
@@ -18,6 +18,6 @@ process BCFTOOLS_STATS {
     script:
     """
     # Run bcftools stats for MultiQC
-    bcftools stats $vcf > "${meta.patient}.${caller}.vcf.stats.txt"
+    bcftools stats $vcf > "${meta.id}.${caller}.vcf.stats.txt"
     """
 }

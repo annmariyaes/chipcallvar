@@ -42,7 +42,16 @@ OCI-AML3,OCI-AML3_H3K27ac,1,test/hs_ChIP_OCI-AML3_rep1_H3K27ac_R1_001.fastq.gz,t
 OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
 ```
 
+```csv {samplesheet.csv}
+patient,sample,vcf,caller
+24_F,SA10,SA10_peaks.vcf,macs3
+85_M,SA11,SA11_peaks.vcf,macs3
+```
+
 #### ⚙️ Parameters File 
+step can be 'mapping', 'annotate'
+
+
 ```yaml {params.yaml}
 OUTDIR: './results'
 SAMPLESHEET: './samplesheet_example.csv'
