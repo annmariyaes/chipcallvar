@@ -20,8 +20,8 @@ workflow CHIPCALLVAR {
             .splitCsv(header: true)
             .map { row ->
                  def meta = [
-                    id: "${row.sample}_${row.replicate}", 
-                    patient: row.patient, 
+                    unique_id: "${row.sample}_${row.replicate}", 
+                    id: row.id, 
                     sample: row.sample,
                     replicate: row.replicate.toInteger(),  
                     control: row.control
@@ -54,8 +54,8 @@ workflow CHIPCALLVAR {
             .splitCsv(header: true)
             .map { row ->
                  def meta = [
-                    id: "${row.sample}_${row.replicate}", 
-                    patient: row.patient, 
+                    unique_id: "${row.sample}_${row.replicate}", 
+                    id: row.id, 
                     sample: row.sample,
                     replicate: row.replicate.toInteger(),  
                     control: row.control,

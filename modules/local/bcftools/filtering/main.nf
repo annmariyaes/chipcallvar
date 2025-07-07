@@ -7,7 +7,7 @@
 
 
 process BCFTOOLS {
-    tag "${meta.patient}"
+    tag "${meta.id}"
     publishDir "${params.OUTDIR}/annotation/${caller}/${meta.id}", mode: 'copy'
     container "${params.BCFTOOLS_CONTAINER}"
     

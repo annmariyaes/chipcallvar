@@ -35,6 +35,6 @@ process VCF2MAF {
         --inhibit-vep
     
     # Compress the maf file
-    gzip ${meta.patient}.${meta.caller}.vep.maf
+    gzip ${meta.id}.${meta.caller}.vep.maf
     """
 }

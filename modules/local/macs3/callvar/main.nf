@@ -6,15 +6,15 @@
 
 
 process MACS3_CALLVAR {
-    tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/variant_calling/macs3/${meta.patient}", mode: 'copy'
+    tag "${meta.id}"
+    publishDir "${params.OUTDIR}/variant_calling/macs3/${meta.id}", mode: 'copy'
     container "${params.MACS3_CONTAINER}"
     
     input:
     tuple val(meta), path(narrow_peaks), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
     
     output:
-    tuple val(meta), path("${meta.patient}.macs3.vcf"), emit: vcf
+    tuple val(meta), path("${meta.id}.macs3.vcf"), emit: vcf
     
     script:
     def ctrl_flag = ctrl_bams ? "--control ${ctrl_bams.join(' ')}" : ''
@@ -28,7 +28,7 @@ process MACS3_CALLVAR {
         ${ctrl_flag} \\
         --multiple-processing ${task.cpus} \\
         --outdir . \\
-        --ofile ${meta.patient}.macs3.vcf \\
+        --ofile ${meta.id}.macs3.vcf \\
         --verbose 2 
     """
 }

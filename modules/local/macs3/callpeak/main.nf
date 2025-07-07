@@ -6,8 +6,8 @@
 
 
 process MACS3_CALLPEAK {
-    tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/peak_calling/macs3/${meta.patient}", mode: 'copy'
+    tag "${meta.id}"
+    publishDir "${params.OUTDIR}/peak_calling/macs3/${meta.id}", mode: 'copy'
     container "${params.MACS3_CONTAINER}"
     label 'process_medium'
    
@@ -15,8 +15,8 @@ process MACS3_CALLPEAK {
     tuple val(meta), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
     
     output:
-    tuple val(meta), path("${meta.patient}_peaks.narrowPeak"), emit: peaks
-    tuple val(meta), path("${meta.patient}_peaks.xls"), path("${meta.patient}_summits.bed"), emit: peak_stats
+    tuple val(meta), path("${meta.id}_peaks.narrowPeak"), emit: peaks
+    tuple val(meta), path("${meta.id}_peaks.xls"), path("${meta.id}_summits.bed"), emit: peak_stats
 
     script:
     def format = meta.single_end ? "BAM" : "BAMPE"
@@ -27,7 +27,7 @@ process MACS3_CALLPEAK {
         ${ctrl_flag} \
         --format ${format} \
         --gsize hs \
-        --name ${meta.patient} \
+        --name ${meta.id} \
         --outdir .
     """
 }

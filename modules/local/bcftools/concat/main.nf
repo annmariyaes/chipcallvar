@@ -7,8 +7,8 @@ Stitching the vcf files together
 
 
 process BCFTOOLS_CONCAT {
-    tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/variant_calling/${caller}/${meta.patient}", mode: 'copy'
+    tag "${meta.id}"
+    publishDir "${params.OUTDIR}/variant_calling/${caller}/${meta.id}", mode: 'copy'
     container "${params.BCFTOOLS_CONTAINER}"
     label 'process_low'
     
@@ -17,7 +17,7 @@ process BCFTOOLS_CONCAT {
     val caller
     
     output:
-    tuple val(meta), path("${meta.patient}.${caller}.merged.vcf.gz"), emit: vcf
+    tuple val(meta), path("${meta.id}.${caller}.merged.vcf.gz"), emit: vcf
     
     script:
     def vcf_list = vcfs.join('\\n')
@@ -26,8 +26,8 @@ process BCFTOOLS_CONCAT {
     bcftools concat \
         -f vcf_list.txt \
         -O z \
-        -o ${meta.patient}.${caller}.merged.vcf.gz
+        -o ${meta.id}.${caller}.merged.vcf.gz
     
-    bcftools index ${meta.patient}.${caller}.merged.vcf.gz
+    bcftools index ${meta.id}.${caller}.merged.vcf.gz
     """
 }
