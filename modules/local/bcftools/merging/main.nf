@@ -9,7 +9,7 @@ https://samtools.github.io/bcftools/bcftools.html#merge
 
 
 process BCFTOOLS_MERGING {
-    tag "$meta.patient"
+    tag "${meta.patient}"
     publishDir "${params.OUTDIR}/annotation/ensembl_vep/${meta.patient}", mode: 'copy'
 
     input:

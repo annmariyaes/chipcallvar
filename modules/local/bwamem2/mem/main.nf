@@ -6,8 +6,7 @@
 
 
 process BWAMEM2_MEM {
-
-    tag "${meta.id}"
+    tag "${meta.patient}"
     publishDir "${params.OUTDIR}/preprocessing/alignment/${meta.id}", mode: 'copy'    
     container "${params.BWAMEM2_CONTAINER}"
 

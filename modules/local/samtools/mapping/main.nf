@@ -6,7 +6,7 @@
 
 
 process SAMTOOLS_MAP {
-    tag "${meta.id}"
+    tag "${meta.patient}"
     publishDir "${params.OUTDIR}/preprocessing/mapped/${meta.id}", mode: 'copy'
     container "${params.SAMTOOLS_CONTAINER}"
     

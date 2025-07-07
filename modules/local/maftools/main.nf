@@ -6,7 +6,7 @@
 
 
 process MAFTOOLS {
-    tag "${meta.id}"
+    tag "${meta.patient}"
     publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.id}", mode: 'copy'
     container "${params.MAFTOOLS_CONTAINER}"
 

@@ -75,7 +75,7 @@ workflow VARIANT_CALLING {
             [peaks_meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
         }
     ch_combinedd = ch_callvar.combine(ch_interval)
-
+    ch_combinedd.view { "Channel: $it" }
     // MACS3 - Tag with caller name
     if (params.tools && params.tools.split(',').contains('macs3')) {
         MACS3_CALLVAR(ch_combinedd)

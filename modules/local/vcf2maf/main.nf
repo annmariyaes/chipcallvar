@@ -6,7 +6,7 @@
 
 
 process VCF2MAF {
-    tag "${meta.id}"
+    tag "${meta.patient}"
     publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.id}", mode: 'copy'
     container "${params.VCF2MAF_CONTAINER}"
 
@@ -19,7 +19,7 @@ process VCF2MAF {
     script:
     """
     # Uncompress the vcf file
-    bgzip -c -d ${vcf} > ${meta.id}.vcf
+    bgzip -dc ${vcf} > ${meta.id}.vcf
     
     # Run vcf2maf
     vcf2maf.pl \
@@ -28,12 +28,13 @@ process VCF2MAF {
         --tumor-id ${meta.id} \
         --ref-fasta ${params.REFERENCE_GENOME} \
         --vep-data ${params.VEP_CACHE} \
+        --cache-version ${params.VEP_VERSION} \
         --vep-path ${params.VEP_PATH} \
         --species homo_sapiens \
         --ncbi-build ${params.ASSEMBLY} \
         --inhibit-vep
     
     # Compress the maf file
-    # gzip ${meta.patient}.macs3.vep.maf
+    gzip ${meta.patient}.${meta.caller}.vep.maf
     """
 }

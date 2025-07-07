@@ -5,7 +5,7 @@
 */
 
 process BCFTOOLS_STATS {
-    tag "${meta.id}"
+    tag "${meta.patient}"
     publishDir "${params.OUTDIR}/multiqc/${caller}", mode: 'copy'
 
     input:
