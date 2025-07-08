@@ -57,7 +57,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     emit:
     vcf_out = VARIANT_FILTERING.out.vcf
     maf_out = MAF_PROCESSING.out.maf
-    // multiqc_html = MULTIQC.out.html
+    multiqc_html = MULTIQC.out.html
 }
 
 

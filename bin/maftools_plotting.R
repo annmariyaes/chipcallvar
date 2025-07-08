@@ -9,6 +9,8 @@ input_maf_directory <- args[1]
 cohort_id <- args[2]
 caller_name <- args[3]
 
+.libPaths("/storage/home/seb01ann/R/x86_64-pc-linux-gnu-library/4.3/")
+
 # Libraries
 suppressMessages(library(maftools))
 suppressMessages(library(GenomicRanges))
