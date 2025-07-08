@@ -43,7 +43,7 @@ workflow CHIPCALLVAR {
                 }                 
                 return [ meta, fastq_files ]
             }
-            // .view { it -> "$it" }
+           .view { it -> "$it" }
         CHIP_SEQ_FASTQ_VARIANT_CALLING(ch_input)
     }
 
@@ -74,8 +74,8 @@ workflow CHIPCALLVAR {
             .filter { row -> row.vcf && file(row.vcf).exists() }
             .map { row ->
                 def meta = [ 
-                             id: row.sample, 
-                             patient: row.patient,
+                             sample: row.sample, 
+                             id: row.id,
                              caller: row.caller ]
                 [ meta, file(row.vcf) ]
             }

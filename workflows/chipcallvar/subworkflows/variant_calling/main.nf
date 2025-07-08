@@ -31,8 +31,8 @@ workflow VARIANT_CALLING {
             meta.control == null ||
             meta.control == ""
         }
-        .map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
-
+        .map { meta, bam, bai -> [meta.id, meta, bam, bai] }
+  
     // Control samples (input/control) - samples that ARE controls
     ch_control = ch_bam
         .filter { meta, bam, bai ->
@@ -40,21 +40,21 @@ workflow VARIANT_CALLING {
             meta.control != null &&
             meta.control != ""
         }
-        .map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
+        .map { meta, bam, bai -> [meta.id, meta, bam, bai] }
 
     // Join treatment and control samples by patient
     ch_joined = ch_treatment
         .join(ch_control, remainder: true)
         .map { tuple_data ->
             if (tuple_data.size() == 5) {
-                // No control sample: [patient, treat_meta, treat_bam, treat_bai, null]
-                def (patient, treat_meta, treat_bam, treat_bai, null_value) = tuple_data
+                // No control sample: [id, treat_meta, treat_bam, treat_bai, null]
+                def (id, treat_meta, treat_bam, treat_bai, null_value) = tuple_data
                 def updated_meta = treat_meta + [has_control: false]
                 [updated_meta, treat_bam, treat_bai, [], []]
             }
             else {
-                // Has control sample: [patient, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai]
-                def (patient, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai) = tuple_data
+                // Has control sample: [id, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai]
+                def (id, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai) = tuple_data
                 def updated_meta = treat_meta + [has_control: true]
                 [updated_meta, treat_bam, treat_bai, ctrl_bam, ctrl_bai]
             }
@@ -62,23 +62,22 @@ workflow VARIANT_CALLING {
 
     // Prepare channel for MACS3 as require peaks
     ch_peaks_keyed = ch_peaks.map { meta, peaks ->
-        [meta.patient, meta, peaks]
+        [meta.id, meta, peaks]
     }
 
     ch_bams_keyed = ch_joined.map { meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
-        [meta.patient, meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
+        [meta.id, meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
     }
 
     ch_callvar = ch_peaks_keyed
         .join(ch_bams_keyed)
-        .map { patient, peaks_meta, peaks, bams_meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
+        .map { id, peaks_meta, peaks, bams_meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
             [peaks_meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
         }
-    ch_combinedd = ch_callvar.combine(ch_interval)
-    ch_combinedd.view { "Channel: $it" }
+    ch_callvar.view { "Channel: $it" }
     // MACS3 - Tag with caller name
     if (params.tools && params.tools.split(',').contains('macs3')) {
-        MACS3_CALLVAR(ch_combinedd)
+        MACS3_CALLVAR(ch_callvar)
         ch_macs3_grouped = MACS3_CALLVAR.out.vcf
             .groupTuple(by: 0)
             .map { meta, vcfs -> [meta, vcfs.sort()] }
@@ -96,7 +95,7 @@ workflow VARIANT_CALLING {
         [meta, peaks, treat_bams, treat_bais]
     }
     ch_indexes = ch_index.combine(ch_dict)
-    ch_combined = ch_vcall.combine(ch_indexes).combine(ch_interval)
+    ch_combined = ch_vcall.combine(ch_indexes)
 
     // MUTECT2 - Tag with caller name
     if (params.tools && params.tools.split(',').contains('mutect2')) {

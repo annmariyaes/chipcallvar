@@ -3,7 +3,7 @@
 
 
 process FILTER_PEAKS_BY_INTERVAL {
-    tag "${meta.patient}_${interval_name}"
+    tag "${meta.id}_${interval_name}"
     publishDir "${params.OUTDIR}/preprocessing/intervals", mode: 'copy'
     container "${params.BEDTOOLS_CONTAINER}"
     
@@ -16,6 +16,6 @@ process FILTER_PEAKS_BY_INTERVAL {
     script:
     interval_name = intervals.baseName
     """
-    bedtools intersect -a ${peaks} -b ${intervals} > ${meta.patient}_${interval_name}_filtered.narrowPeak
+    bedtools intersect -a ${peaks} -b ${intervals} > ${meta.id}_${interval_name}_filtered.narrowPeak
     """
 }

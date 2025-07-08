@@ -11,7 +11,7 @@ process MACS3_CALLVAR {
     container "${params.MACS3_CONTAINER}"
     
     input:
-    tuple val(meta), path(narrow_peaks), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
+    tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
     
     output:
     tuple val(meta), path("${meta.id}.macs3.vcf"), emit: vcf
@@ -23,7 +23,7 @@ process MACS3_CALLVAR {
     """    
     # Run MACS3 callvar for this chromosome
     macs3 callvar \\
-        --peak ${narrow_peaks} \\
+        --peak ${peaks} \\
         --treatment ${treat_files} \\
         ${ctrl_flag} \\
         --multiple-processing ${task.cpus} \\

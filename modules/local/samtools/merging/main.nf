@@ -6,7 +6,7 @@
 
 
 process SAMTOOLS_MERGE {
-    tag "${meta.patient}" 
+    tag "${meta.unique_id}" 
     publishDir "${params.OUTDIR}/preprocessing/merged/${meta.sample}", mode: 'copy'
     container "${params.SAMTOOLS_CONTAINER}"
     

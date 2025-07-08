@@ -28,7 +28,7 @@ workflow ALIGN_AND_PROCESS {
         .groupTuple()
         .map { sample, metas, bams, bais ->
             def merged_meta = metas[0].clone()
-            merged_meta.id = sample
+            merged_meta.sm = sample
             tuple(merged_meta, bams, bais)
         }        
     // Merge technical replicates

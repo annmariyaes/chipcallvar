@@ -6,7 +6,7 @@
 
 
 process VCF2MAF {
-    tag "${meta.patient}"
+    tag "${meta.id}"
     publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.id}", mode: 'copy'
     container "${params.VCF2MAF_CONTAINER}"
 
@@ -14,7 +14,7 @@ process VCF2MAF {
     tuple val(meta), path(vcf)
     
     output:
-    tuple val(meta), path("${meta.id}.${meta.caller}.vep.maf"), emit: maf
+    tuple val(meta), path("${meta.id}.${meta.caller}.vep.maf.gz"), emit: maf
     
     script:
     """

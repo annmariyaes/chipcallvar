@@ -6,21 +6,20 @@
 
 
 process GATK_MUTECT2 {
-    tag "${meta.patient}"
-    publishDir "${params.OUTDIR}/variant_calling/mutect2/${meta.patient}", mode: 'copy'
+    tag "${meta.id}"
+    publishDir "${params.OUTDIR}/variant_calling/mutect2/${meta.id}", mode: 'copy'
     container "${params.GATK_CONTAINER}"
     
     input:
-    tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(reference), path("*"), path(dict), path(intervals) 
+    tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(reference), path("*"), path(dict)
 
     output:
-    tuple val(meta), path("${meta.patient}.mutect2.vcf.gz"), emit: vcf
+    tuple val(meta), path("${meta.id}.mutect2.vcf.gz"), emit: vcf
 
     script:
-    interval = intervals.baseName
     """
     # create target bed file from peaks
-    cut -f1-3 ${peaks} > ${meta.patient}.bed
+    cut -f1-3 ${peaks} > ${meta.id}.bed
     # Mutect2 variant calling 
     gatk Mutect2 \
         -R ${reference} \
@@ -28,7 +27,7 @@ process GATK_MUTECT2 {
         --germline-resource ${params.GNOMAD} \
         --panel-of-normals ${params.PON} \
         --sequence-dictionary ${dict} \
-        --intervals ${meta.patient}.bed \
-        -O ${meta.patient}.mutect2.vcf.gz
+        --intervals ${meta.id}.bed \
+        -O ${meta.id}.mutect2.vcf.gz
     """
 }

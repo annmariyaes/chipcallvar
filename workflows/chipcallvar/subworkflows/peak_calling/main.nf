@@ -20,8 +20,8 @@ workflow PEAK_CALLING {
             meta.control == null || 
             meta.control == "" 
         }
-        .map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
-    
+        .map { meta, bam, bai -> [meta.id, meta, bam, bai] }
+     ch_treatment.view()    
     // Control samples (input/control) - samples that ARE controls
     ch_control = ch_bam
         .filter { meta, bam, bai -> 
@@ -29,21 +29,21 @@ workflow PEAK_CALLING {
             meta.control != null && 
             meta.control != "" 
         }
-        .map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
+        .map { meta, bam, bai -> [meta.id, meta, bam, bai] }
         
-    // Join treatment and control samples by patient
+    // Join treatment and control samples by patient/cell lines id
     ch_joined = ch_treatment
         .join(ch_control, remainder: true)
         .map { tuple_data ->
             if (tuple_data.size() == 5) {
-                // No control sample: [patient, treat_meta, treat_bam, treat_bai, null]
-                def (patient, treat_meta, treat_bam, treat_bai, null_value) = tuple_data
+                // No control sample: [id, treat_meta, treat_bam, treat_bai, null]
+                def (id, treat_meta, treat_bam, treat_bai, null_value) = tuple_data
                 def updated_meta = treat_meta + [has_control: false]
                 [updated_meta, treat_bam, treat_bai, [], []]
             } 
             else {
-                // Has control sample: [patient, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai]
-                def (patient, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai) = tuple_data
+                // Has control sample: [id, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai]
+                def (id, treat_meta, treat_bam, treat_bai, ctrl_meta, ctrl_bam, ctrl_bai) = tuple_data
                 def updated_meta = treat_meta + [has_control: true]
                 [updated_meta, treat_bam, treat_bai, ctrl_bam, ctrl_bai]
             }

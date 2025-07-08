@@ -6,7 +6,7 @@
 
 
 process MOSDEPTH_STATS {
-    tag "${meta.patient}"
+    tag "${meta.id}"
     publishDir "${params.OUTDIR}/multiqc", mode: 'copy'
     container "${params.MOSDEPTH_CONTAINER}"
     
