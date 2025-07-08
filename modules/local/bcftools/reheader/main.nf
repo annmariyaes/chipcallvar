@@ -41,7 +41,6 @@ process BCFTOOLS_REHEADER {
     # Reheader the VCF with the updated header and new sample name
     bcftools reheader -h header.txt -o ${meta.id}.reheader.vcf $vcf
 
-
     # Move INFO/SB to FORMAT/SB
     bcftools query -f '%CHROM\\t%POS\\t%REF\\t%ALT\\t%INFO/SB\\n' ${meta.id}.reheader.vcf | awk '
     BEGIN { OFS="\\t" }
@@ -75,11 +74,12 @@ process BCFTOOLS_REHEADER {
     bcftools annotate -a ${meta.id}.SB.values.txt.gz -c CHROM,POS,REF,ALT,FORMAT/SB -o ${meta.id}.with.sb.vcf ${meta.id}.with.ad.vcf
 
     # Create FORMAT/VAF from FORMAT/AD
-    bcftools +fill-tags ${meta.id}.with.sb.vcf -Oz -o ${meta.id}.${caller}.vep.filled.vcf.gz -t FORMAT/VAF
-    tabix -p vcf ${meta.id}.${caller}.vep.filled.vcf.gz
-
+    # The fraction of reads with the alternate allele, requires FORMAT/AD
+    bcftools +fill-tags ${meta.id}.with.sb.vcf -Oz -o ${meta.id}.${caller}.vep.filled.vcf.gz -- -t FORMAT/VAF
+    tabix -f -p vcf ${meta.id}.${meta.caller}.vep.filled.vcf.gz
+    
     # Cleanup
-    rm header.txt ${meta.id}.AD.values.txt.gz ${meta.id}.AD.values.txt.gz.tbi ${meta.id}.SB.values.txt.gz ${meta.id}.SB.values.txt.gz.tbi ${meta.id}.reheader.vcf ${meta.id}.with.ad.vcf ${meta.id}.with.sb.vcf    
+    # rm header.txt ${meta.id}.AD.values.txt.gz ${meta.id}.AD.values.txt.gz.tbi ${meta.id}.SB.values.txt.gz ${meta.id}.SB.values.txt.gz.tbi ${meta.id}.reheader.vcf ${meta.id}.with.ad.vcf ${meta.id}.with.sb.vcf    
     """
 }
 

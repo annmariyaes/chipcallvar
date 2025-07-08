@@ -21,7 +21,7 @@ workflow MAF_PROCESSING {
     // .view { it -> "$it" }
 
     r_script = file("${projectDir}/bin/maftools_plotting.R")
-    // MAFTOOLS(ch_maf, r_script)
+    MAFTOOLS(ch_maf, r_script)
     
     emit:
     maf   = vcf2maf.maf  // [ meta, maf ]
