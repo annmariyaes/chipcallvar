@@ -21,7 +21,7 @@ workflow PEAK_CALLING {
             meta.control == "" 
         }
         .map { meta, bam, bai -> [meta.id, meta, bam, bai] }
-     ch_treatment.view()    
+
     // Control samples (input/control) - samples that ARE controls
     ch_control = ch_bam
         .filter { meta, bam, bai -> 

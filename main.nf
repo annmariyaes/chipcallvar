@@ -43,7 +43,7 @@ workflow CHIPCALLVAR {
                 }                 
                 return [ meta, fastq_files ]
             }
-           .view { it -> "$it" }
+            // .view { it -> "$it" }
         CHIP_SEQ_FASTQ_VARIANT_CALLING(ch_input)
     }
 

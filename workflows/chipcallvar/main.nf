@@ -45,7 +45,6 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     
     ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
 
-    /*
     MULTIQC(
     	QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
     	BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
@@ -53,8 +52,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     	VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
     	VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
     	ch_multiqc_config
-    ) 
-   */  
+    )   
  
     emit:
     vcf_out = VARIANT_FILTERING.out.vcf

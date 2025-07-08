@@ -36,14 +36,14 @@ To speed up variant calling, the reference genome is split into smaller **genomi
 Each row describes one replicate of a ChIP-seq experiment. The input format is:
 
 ```csv {samplesheet.csv}
-patient,sample,replicate,fastq_1,fastq_2,control,control_replicate
+id,sample,replicate,fastq_1,fastq_2,control,control_replicate
 OCI-AML3,OCI-AML3_input,1,test/hs_ChIP_OCI-AML3_rep1_Input_R1_001.fastq.gztest/hs_ChIP_OCI-AML3_rep1_Input_R2_001.fastq.gz,,
 OCI-AML3,OCI-AML3_H3K27ac,1,test/hs_ChIP_OCI-AML3_rep1_H3K27ac_R1_001.fastq.gz,test/hs_ChIP_OCI-AML3_rep1_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
 OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
 ```
 
 ```csv {samplesheet.csv}
-patient,sample,vcf,caller
+id,sample,vcf,caller
 24_F,SA10,SA10_peaks.vcf,macs3
 85_M,SA11,SA11_peaks.vcf,macs3
 ```

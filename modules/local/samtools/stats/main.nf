@@ -5,7 +5,7 @@
 */
 
 process SAMTOOLS_STATS {
-    tag "${meta.id}"
+    tag "${meta.sample}"
     publishDir "${params.OUTDIR}/multiqc", mode: 'copy'
     container "${params.SAMTOOLS_CONTAINER}"
 
@@ -13,13 +13,13 @@ process SAMTOOLS_STATS {
     tuple val(meta), path(bam), path(bai)
 
     output:
-    tuple val(meta), path("${meta.id}.bam.stat.txt"), path("${meta.id}.bam.flagstat.txt"), emit: bam_stats
+    tuple val(meta), path("${meta.sample}.bam.stat.txt"), path("${meta.sample}.bam.flagstat.txt"), emit: bam_stats
 
     script:
     """
     # summary of alignment statistics (total reads, mapped reads, properly paired, duplicates, etc.)
-    samtools stats $bam > "${meta.id}.bam.stat.txt"
+    samtools stats $bam > "${meta.sample}.bam.stat.txt"
 
-    samtools flagstat $bam > "${meta.id}.bam.flagstat.txt"
+    samtools flagstat $bam > "${meta.sample}.bam.flagstat.txt"
     """
 }

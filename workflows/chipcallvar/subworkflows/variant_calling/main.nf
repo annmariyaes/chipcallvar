@@ -74,7 +74,7 @@ workflow VARIANT_CALLING {
         .map { id, peaks_meta, peaks, bams_meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
             [peaks_meta, peaks, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
         }
-    ch_callvar.view { "Channel: $it" }
+
     // MACS3 - Tag with caller name
     if (params.tools && params.tools.split(',').contains('macs3')) {
         MACS3_CALLVAR(ch_callvar)

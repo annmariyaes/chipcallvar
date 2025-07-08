@@ -6,7 +6,7 @@
 
 
 process MOSDEPTH_STATS {
-    tag "${meta.id}"
+    tag "${meta.sample}"
     publishDir "${params.OUTDIR}/multiqc", mode: 'copy'
     container "${params.MOSDEPTH_CONTAINER}"
     
@@ -19,7 +19,8 @@ process MOSDEPTH_STATS {
     path "*.mosdepth.region.dist.txt", optional: true
     
     script:
-    def prefix = meta.id
+    // <prefix>: base name for output files (no extension)
+    def prefix = meta.sample
     """
     mosdepth ${prefix} ${bam}
     """
