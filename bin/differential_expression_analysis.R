@@ -1,22 +1,29 @@
-.libPaths("/home/seb01ann/R/x86_64-pc-linux-gnu-library/4.3/")
+#!/usr/bin/env Rscript
 
-library(dplyr)
-library(ggplot2)
-library(patchwork)
-library(RColorBrewer)
-library(pheatmap)
-library(reshape2)
-library(ggrepel)
-library(coin)
+# Parse arguments
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) < 3) {
+  stop("Usage: Rscript variant_calling.R <input_maf_directory> <cohort_id> <caller_name>")
+}
+input_maf_directory <- args[1]
+cohort_id <- args[2]
+caller_name <- args[3]
+
+
+# Libraries
+.libPaths("/storage/home/seb01ann/R/x86_64-pc-linux-gnu-library/4.3/")
+
+suppressMessages(library(dplyr))
+suppressMessages(library(ggplot2))
+suppressMessages(library(RColorBrewer))
+suppressMessages(library(coin))
 
 
 # Metadata
 mdata <- read.csv("/storage/projects/P024_ChIPseq_AE/csv/metadata.csv", header = TRUE)
 metadata <- data.frame(Samples = mdata$Sample_name_x, Sex = mdata$Gender, Age = mdata$Age, Disease=mdata$Disease.Status, Type = mdata$cell_type_x)
 
-
-
-
+# TPM
 tpm <- read.table("/storage/projects/P034_RNAseq_AE/nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv", header=TRUE, row.names=1, sep="\t")
 tpm <- tpm[, -1]
 subset_tpm <- tpm[ , metadata$Samples]
@@ -24,7 +31,7 @@ head(subset_tpm)
 
 
 
-
+# Variant callers
 variant_callers = read.csv("/storage/projects/P024_ChIPseq_AE/rstudio/mutect2_macs3_freebayes.csv", header=TRUE, sep=",")
 
 # Filter variants as before
@@ -32,7 +39,6 @@ filtered_variants <- variant_callers %>%
   group_by(Hugo_Symbol) %>%
   filter(n() > 1) %>%
   arrange(Hugo_Symbol)
-
 
 
 # T-test
@@ -71,7 +77,6 @@ pval_to_asterisks <- function(p) {
 
 
 
-
 # Wilcoxon rank-sum test (Wilcox test) 
 ### TPM that are often skewed, even after log transformation.
 ### A non-parametric test used to compare the distribution of two independent groups. 
@@ -103,7 +108,6 @@ expression_analysis <- function(dge_df, n_permutations = 10000) {
   
   return(list(p_val = p_val, log2FC = log2FC, Perm_p_val = perm_p_val))
 }
-
 
 
 
@@ -250,4 +254,3 @@ merged_variants <- merged_variants %>%
 
 write.csv(merged_variants, "/storage/projects/P024_ChIPseq_AE/rstudio/merged_variants.csv", row.names = FALSE)
 head(merged_variants)
-
