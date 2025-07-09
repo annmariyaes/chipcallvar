@@ -23,6 +23,6 @@ process MAFTOOLS {
     set -euo pipefail
 
     # Run the R script with proper arguments
-    Rscript ${r_script} ${maf_dir} ${meta.id} ${meta.caller}
+    Rscript --vanilla -e '.libPaths("/usr/local/lib/R/site-library")' ${r_script} ${maf_dir} ${meta.id} ${meta.caller}
     """
 }

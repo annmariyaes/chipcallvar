@@ -3,28 +3,29 @@
 # Parse arguments
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 3) {
-  stop("Usage: Rscript variant_calling.R <input_maf_directory> <cohort_id> <caller_name>")
+  stop("Usage: Rscript differential_expression_analysis.R <tpm> <filtered_variants>")
 }
-input_maf_directory <- args[1]
-cohort_id <- args[2]
-caller_name <- args[3]
+tpm <- args[1]
+filtered_variants <- args[2]
 
 
 # Libraries
-.libPaths("/storage/home/seb01ann/R/x86_64-pc-linux-gnu-library/4.3/")
+.libPaths("/storage/share/R/lib")
 
 suppressMessages(library(dplyr))
 suppressMessages(library(ggplot2))
 suppressMessages(library(RColorBrewer))
 suppressMessages(library(coin))
-
+suppressMessages(library(stats))
+suppressMessages(library(readr))
+suppressMessages(library(tidyr))
 
 # Metadata
 mdata <- read.csv("/storage/projects/P024_ChIPseq_AE/csv/metadata.csv", header = TRUE)
 metadata <- data.frame(Samples = mdata$Sample_name_x, Sex = mdata$Gender, Age = mdata$Age, Disease=mdata$Disease.Status, Type = mdata$cell_type_x)
 
 # TPM
-tpm <- read.table("/storage/projects/P034_RNAseq_AE/nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv", header=TRUE, row.names=1, sep="\t")
+tpm <- read.table(tpm, header=TRUE, row.names=1, sep="\t")
 tpm <- tpm[, -1]
 subset_tpm <- tpm[ , metadata$Samples]
 head(subset_tpm)
@@ -32,7 +33,7 @@ head(subset_tpm)
 
 
 # Variant callers
-variant_callers = read.csv("/storage/projects/P024_ChIPseq_AE/rstudio/mutect2_macs3_freebayes.csv", header=TRUE, sep=",")
+variant_callers = read.csv(filtered_variants, header=TRUE, sep=",")
 
 # Filter variants as before
 filtered_variants <- variant_callers %>%
