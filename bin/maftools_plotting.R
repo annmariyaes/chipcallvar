@@ -3,7 +3,7 @@
 # Parse arguments
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 3) {
-  stop("Usage: Rscript variant_calling.R <input_maf_directory> <cohort_id> <caller_name>")
+  stop("Usage: Rscript maftools_plotting.R <input_maf_directory> <cohort_id> <caller_name>")
 }
 input_maf_directory <- args[1]
 cohort_id <- args[2]

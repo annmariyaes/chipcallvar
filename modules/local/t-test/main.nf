@@ -1,28 +1,29 @@
 /*
 =============================================================================
-        MODULE: MAFTOOLS library script
+        MODULE: Perform t-test, permutation test on filtered variants 
+                and find the significant genes/biomarkers
 =============================================================================
 */
 
 
-process MAFTOOLS {
+process TTEST {
     tag "${meta.id}"
     publishDir "${params.OUTDIR}/analysis", mode: 'copy'
     container "${params.R_CONTAINER}"
-
+    
     input:
-    tuple val(meta), path(maf_dir)
+    tuple val(meta), path(csv)
+    tuple val(meta), path(tpm)
     path(r_script)
-
+    
     output:
-    tuple val(meta), path("*.png"), emit: plots
-    path("*.csv"), emit: csv
-
+    tuple val(meta), path("*.png"), emit: violin_plots
+    tuple val(meta), path("*.csv"), emit: csv
+    
     script:
     """
     set -euo pipefail
-
     # Run the R script with proper arguments
-    Rscript ${r_script} ${maf_dir} ${meta.id} ${meta.caller}
+    Rscript ${r_script}
     """
 }

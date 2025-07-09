@@ -11,7 +11,7 @@ include { BAM_STATS; VCF_STATS }  from '../../workflows/chipcallvar/subworkflows
 include { VARIANT_ANNOTATION } from '../../workflows/chipcallvar/subworkflows/variant_annotation'
 include { VCF_POSTPROCESSING } from '../../workflows/chipcallvar/subworkflows/post_processing'
 include { VARIANT_FILTERING } from '../../workflows/chipcallvar/subworkflows/variant_filtering'
-include { MAF_PROCESSING } from '../../workflows/chipcallvar/subworkflows/plots'
+include { DOWNSTREAM_ANALYSIS } from '../../workflows/chipcallvar/subworkflows/plots'
 include { MULTIQC } from '../../modules/local/multiqc'
 
 
@@ -41,7 +41,9 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
 
     VCF_STATS(VARIANT_FILTERING.out.vcf)
-    MAF_PROCESSING(VARIANT_FILTERING.out.vcf)
+
+    ch_tpm = Channel.fromPath(params.tpm, checkIfExists: true)
+    DOWNSTREAM_ANALYSIS(VARIANT_FILTERING.out.vcf, ch_tpm)
     
     ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
 
@@ -56,7 +58,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
  
     emit:
     vcf_out = VARIANT_FILTERING.out.vcf
-    maf_out = MAF_PROCESSING.out.maf
+    maf_out = DOWNSTREAM_ANALYSIS.out.maf
     multiqc_html = MULTIQC.out.html
 }
 
@@ -85,7 +87,7 @@ workflow CHIP_SEQ_BAM_VARIANT_CALLING {
     VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
 
     VCF_STATS(VARIANT_FILTERING.out.vcf)
-    MAF_PROCESSING(VARIANT_FILTERING.out.vcf)
+    DOWNSTREAM_ANALYSIS(VARIANT_FILTERING.out.vcf)
 
     ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)
     MULTIQC(
@@ -99,7 +101,7 @@ workflow CHIP_SEQ_BAM_VARIANT_CALLING {
 
     emit:
     vcf_out = VARIANT_FILTERING.out.vcf
-    maf_out = MAF_PROCESSING.out.maf
+    maf_out = DOWNSTREAM_ANALYSIS.out.maf
     multiqc_html = MULTIQC.out.html
 }
 
@@ -117,11 +119,11 @@ workflow CHIP_SEQ_VCF_VARIANT_ANNOTATION {
 
     main:
     VARIANT_ANNOTATION(ch_input)
-    // VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
-    // VCF_STATS(VARIANT_FILTERING.out.vcf)
+    VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
+    VCF_STATS(VARIANT_FILTERING.out.vcf)
     MAF_PROCESSING(VARIANT_ANNOTATION.out.vcf)
 
     emit:
     vcf_out = VARIANT_ANNOTATION.out.vcf
-    maf_out = MAF_PROCESSING.out.maf
+    maf_out = DOWNSTREAM_ANALYSIS.out.maf
 }

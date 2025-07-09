@@ -57,10 +57,12 @@ OUTDIR: './results'
 SAMPLESHEET: './samplesheet_example.csv'
 step: 'mapping'
 tools: 'macs3,mutect2,freebayes'
-email: 'example@gmail.com'
 genome: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
 fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
 assembly: 'GRCh38'
+skip_tools: 'dge'
+tpm: '/storage/projects/P034_RNAseq_AE/nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv'
+email: 'example@gmail.com'
 ```
 
 ### 🚀 Running the Pipeline
