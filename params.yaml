@@ -1,5 +1,5 @@
-OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-macs3'
-SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/csv/samplesheet_example.csv'
+OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-test'
+SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/chipcallvar/example.csv'
 step: 'mapping'
 tools: 'macs3,mutect2,freebayes'
 # skip_tools: 'dge'

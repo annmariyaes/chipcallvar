@@ -29,7 +29,10 @@ workflow DOWNSTREAM_ANALYSIS {
     // give option to perform differential expression analysis (t-tests) or not
     if (!(params.skip_tools && params.skip_tools.split(',').contains('dge'))) {
         r_script_dge = file("${projectDir}/bin/differential_expression_analysis.R")
-        TTEST(MAFTOOLS.out.csv, ch_tpm, r_script_dge)
+        ch_dge = MAFTOOLS.out.csv.map { meta, csv ->
+            [meta, csv]
+        }
+        TTEST(ch_dge, ch_tpm, r_script_dge)
         
         ch_violin_plots = TTEST.out.violin_plots
         ch_ttest_csv = TTEST.out.csv

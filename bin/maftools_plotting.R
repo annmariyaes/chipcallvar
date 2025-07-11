@@ -1,5 +1,4 @@
 #!/usr/bin/env Rscript
-.libPaths("/usr/local/lib/R/site-library")
 
 # Parse arguments
 args <- commandArgs(trailingOnly = TRUE)
@@ -11,13 +10,13 @@ cohort_id <- args[2]
 caller_name <- args[3]
 
 # Libraries
-message(.libPaths())
+.libPaths("/storage/share/R/lib")
 suppressMessages(library(maftools))
 suppressMessages(library(GenomicRanges))
 suppressMessages(library(IRanges))
 suppressMessages(library(dplyr))
 suppressMessages(library(stats))
-suppressMessages(library(readr))
+suppressMessages(library(Cairo))
 suppressMessages(library(tidyr))
 
 # Define variant classes of interest
@@ -96,20 +95,19 @@ write.csv(filtered_variants, file = filename, row.names = FALSE)
 
 # Output plots
 save_and_show_plot <- function(plot_func, filename, ...) {
-  png(filename, width = 20, height = 16, units = "in", pointsize = 30, res = 300)
+  png(filename, width = 20, height = 16, units = "in", pointsize = 30, res = 300, type ="cairo")
   plot_func(...)
   dev.off()
   plot_func(...)  # optional if you want to show it in interactive mode
 }
 
-out_prefix <- paste0(cohort_id, ".", caller_name)
 save_and_show_plot(plot_func = oncoplot,
-                   filename = paste0(out_prefix, ".waterfallplot.png"),
+                   filename = paste0(caller_name, ".waterfallplot.png"),
                    maf = aml, top = 15, legendFontSize = 0.8,
                    fontSize = 0.6, gene_mar = 8, showTumorSampleBarcodes = TRUE)
 
 save_and_show_plot(plot_func = plotmafSummary,
-                   filename = paste0(out_prefix, ".mafSummary.png"),
+                   filename = paste0(caller_name, ".mafSummary.png"),
                    maf = aml, rmOutlier = TRUE, addStat = 'mean', dashboard = TRUE, titvRaw = TRUE)
 
 # Find recurrent mutations across samples

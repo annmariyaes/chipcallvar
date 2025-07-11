@@ -2,23 +2,22 @@
 
 # Parse arguments
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 3) {
-  stop("Usage: Rscript differential_expression_analysis.R <tpm> <filtered_variants>")
+if (length(args) < 2) {
+  stop("Usage: Rscript differential_expression_analysis.R <tpm> <recurrent_variants>")
 }
 tpm <- args[1]
 filtered_variants <- args[2]
 
-
 # Libraries
 .libPaths("/storage/share/R/lib")
-
+message(.libPaths())
 suppressMessages(library(dplyr))
-suppressMessages(library(ggplot2))
 suppressMessages(library(RColorBrewer))
-suppressMessages(library(coin))
 suppressMessages(library(stats))
-suppressMessages(library(readr))
 suppressMessages(library(tidyr))
+suppressMessages(library(ggplot2))
+suppressMessages(library(coin))
+suppressMessages(library(readr))
 
 # Metadata
 mdata <- read.csv("/storage/projects/P024_ChIPseq_AE/csv/metadata.csv", header = TRUE)
@@ -28,8 +27,6 @@ metadata <- data.frame(Samples = mdata$Sample_name_x, Sex = mdata$Gender, Age = 
 tpm <- read.table(tpm, header=TRUE, row.names=1, sep="\t")
 tpm <- tpm[, -1]
 subset_tpm <- tpm[ , metadata$Samples]
-head(subset_tpm)
-
 
 
 # Variant callers
@@ -127,13 +124,7 @@ for (gene_of_interest in unique(filtered_variants$Hugo_Symbol)) {
   filtered_rows <- filtered_variants[filtered_variants$Hugo_Symbol == gene_of_interest, ]
   
   # Merge sample names from different callers
-  filtered_rows$Sample_Names_merged <- apply(filtered_rows[, 
-                                                           c("Sample_Names_mutect2", "Sample_Names_macs3", "Sample_Names_freebayes")], 1, function(x) {
-                                                             valid_samples <- x[x != "" & !is.na(x)]
-                                                             paste(unique(valid_samples), collapse = ", ")
-                                                           })
-  
-  sample_list <- lapply(filtered_rows$Sample_Names_merged, function(x) {
+  sample_list <- lapply(filtered_rows$Sample_Names, function(x) {
     unlist(strsplit(x, ",\\s*"))
   })
   
@@ -161,7 +152,6 @@ for (gene_of_interest in unique(filtered_variants$Hugo_Symbol)) {
     # Perform differential expression analysis
     dge <- expression_analysis(plot_data, n_permutations = 10000)
     
-    if (!is.na(dge$p_val) && !is.na(dge$Perm_p_val)) {
       # Store result for multiple testing correction
       result_id <- paste(gene_of_interest, i, sep = "_")
       all_results[[result_id]] <- list(
@@ -177,7 +167,6 @@ for (gene_of_interest in unique(filtered_variants$Hugo_Symbol)) {
         non_mut_samples = non_mut_samples,
         plot_data = plot_data
       )
-    }
   }
 }
 
@@ -202,8 +191,6 @@ if (length(all_results) > 0) {
     result$p_adj <- p_adj[i]
     result$perm_p_adj <- perm_p_adj[i]
     
-    # Create plots for significant results
-    if (result$p_val < 0.05 && result$perm_p_val < 0.05) {
       # Store in variant_info data frame
       variant_info <- rbind(variant_info, data.frame(
         Hugo_Symbol = result$gene,
@@ -220,7 +207,7 @@ if (length(all_results) > 0) {
         stringsAsFactors = FALSE
       ))
       # Save results statistically significant genes to CSV
-      write.csv(variant_info, "/storage/projects/P024_ChIPseq_AE/rstudio/variants_info.csv", row.names = FALSE)
+      write.csv(variant_info, "variants_info.csv", row.names = FALSE)
       
       plot_data <- result$plot_data
       
@@ -240,9 +227,7 @@ if (length(all_results) > 0) {
                  label = paste0("Wilcox test ",  pval_to_asterisks(result$p_val), 
                                 "\nPermutation test ",  pval_to_asterisks(result$p_val)))
       
-      print(p1)
-      
-    }
+      ggsave(filename = file.path(getwd(), paste0(result$gene, "_", result$variant_idx, ".png")), plot = p1, width = 6, height = 4)
   }
 }
 
@@ -251,7 +236,6 @@ merged_variants <- merge(variant_callers, variant_info, by=c("Hugo_Symbol", "Chr
 
 merged_variants <- merged_variants %>%
   mutate(Coordinates = paste0(Chromosome, ":", Start_Position, "-", End_Position), .after = Hugo_Symbol) %>%
-  select(-Chromosome, -Start_Position, -End_Position, -Mutant, -Non_mutant, -Sample_Names_merged)
+  select(-Chromosome, -Start_Position, -End_Position, -Mutant, -Non_mutant, -Sample_Names)
 
-write.csv(merged_variants, "/storage/projects/P024_ChIPseq_AE/rstudio/merged_variants.csv", row.names = FALSE)
-head(merged_variants)
+write.csv(merged_variants, "merged_variants.csv", row.names = FALSE)

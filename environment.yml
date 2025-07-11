@@ -1,0 +1,19 @@
+name: r_env
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - r-base=4.3
+  - bioconductor-maftools
+  - bioconductor-genomicranges
+  - bioconductor-iranges
+  - r-dplyr
+  - r-ggplot2
+  - r-rcolorbrewer
+  - r-coin
+  - r-cairo
+  - r-stats
+  - r-readr
+  - r-tidyr
+  - r-r.utils
