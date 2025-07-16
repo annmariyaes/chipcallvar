@@ -19,12 +19,15 @@ workflow DOWNSTREAM_ANALYSIS {
     
     main:
     vcf2maf = VCF2MAF(ch_vcf)
-    ch_maf = vcf2maf.maf.map { meta, maf ->
-        [meta, maf.parent]
-    }
-    // .view { it -> "$it" }
+
+
+    ch_maf_grouped = vcf2maf.maf
+    	.map { meta, maf -> tuple(meta.caller, maf) }
+    	.groupTuple()
+        // .view()
+
     r_script_maftools = file("${projectDir}/bin/maftools_plotting.R")
-    MAFTOOLS(ch_maf, r_script_maftools)
+    MAFTOOLS(ch_maf_grouped, r_script_maftools)
     
     // give option to perform differential expression analysis (t-tests) or not
     if (!(params.skip_tools && params.skip_tools.split(',').contains('dge'))) {

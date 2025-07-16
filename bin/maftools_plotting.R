@@ -2,12 +2,11 @@
 
 # Parse arguments
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 3) {
-  stop("Usage: Rscript maftools_plotting.R <input_maf_directory> <cohort_id> <caller_name>")
+if (length(args) < 2) {
+  stop("Usage: Rscript maftools_plotting.R <input_maf_directory> <caller_name>")
 }
 input_maf_directory <- args[1]
-cohort_id <- args[2]
-caller_name <- args[3]
+caller_name <- args[2]
 
 # Libraries
 .libPaths("/storage/share/R/lib")
@@ -25,7 +24,7 @@ interest <- c("3'Flank", "3'UTR", "5'Flank", "5'UTR", "IGR", "Intron", "RNA",
               "Translation_Start_Site", "Unknown")
 
 # Load and merge MAF files
-maf_files <- list.files(input_maf_directory, pattern = ".vep.maf", full.names = TRUE, recursive = TRUE)
+maf_files <- list.files(input_maf_directory, pattern = ".vep.maf.gz", full.names = TRUE, recursive = TRUE)
 print(length(maf_files))
 maf_list <- lapply(maf_files, read.maf, vc_nonSyn = interest)
 names(maf_list) <- basename(dirname(maf_files))

@@ -46,16 +46,17 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     DOWNSTREAM_ANALYSIS(VARIANT_FILTERING.out.vcf, ch_tpm)
     
     ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
+    // Combine all channels first
+    all_files = QUALITY_CONTROL.out.fastqc_zip
+    	.mix(BAM_STATS.out.bam_stats1)
+    	.mix(BAM_STATS.out.bam_stats2)
+    	.mix(VCF_STATS.out.vcf_stats)
+    	.mix(VARIANT_ANNOTATION.out.vep_stats)
+    	.map { it[1] }
+    	.collect()
 
-    MULTIQC(
-    	QUALITY_CONTROL.out.fastqc_zip.map { it[1] }.collect(),
-    	BAM_STATS.out.bam_stats1.map { it[1] }.collect(),
-    	BAM_STATS.out.bam_stats2.map { it[1] }.collect(),
-    	VCF_STATS.out.vcf_stats.map { it[1] }.collect(),
-    	VARIANT_ANNOTATION.out.vep_stats.map { it[1] }.collect(),
-    	ch_multiqc_config
-    )   
- 
+    MULTIQC(all_files, ch_multiqc_config)
+
     emit:
     vcf_out = VARIANT_FILTERING.out.vcf
     maf_out = DOWNSTREAM_ANALYSIS.out.maf

@@ -25,7 +25,7 @@ workflow VCF_POSTPROCESSING {
 
     if (params.tools && params.tools.split(',').contains('macs3')) {
         vep_macs3 = BCFTOOLS_REHEADER_MACS3(ch_branched.macs3, 'macs3')
-        ch_branched.view { "debugggg: $it" }
+        // ch_branched.view { "debugggg: $it" }
         ch_vcf = ch_vcf.mix(vep_macs3.vcf)
     }
 

@@ -18,6 +18,6 @@ process BCFTOOLS_STATS {
     script:
     """
     # Run bcftools stats for MultiQC
-    bcftools stats $vcf > "${meta.id}.${meta.caller}.vcf.stats.txt"
+    bcftools stats $vcf > "${meta.id}.${meta.replicate}.${meta.caller}.vcf.stats.txt"
     """
 }

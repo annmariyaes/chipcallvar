@@ -24,10 +24,10 @@ process BWAMEM2_MEM {
     
     if [[ \${#fastqs[@]} -eq 1 ]]; then
         echo "Single-end detected"
-        bwa-mem2 mem -t ${task.cpus} -R "@RG\\tID:${meta.unique_id}\\tSM:${meta.id}" "${reference}" "\${fastqs[0]}" > "${meta.unique_id}.sam"
+        bwa-mem2 mem -t ${task.cpus} -R "@RG\\tID:${meta.unique_id}\\tSM:${meta.sample}" "${reference}" "\${fastqs[0]}" > "${meta.unique_id}.sam"
     else
         echo "Paired-end detected"
-        bwa-mem2 mem -t ${task.cpus} -R "@RG\\tID:${meta.unique_id}\\tSM:${meta.id}" "${reference}" "\${fastqs[0]}" "\${fastqs[1]}" > "${meta.unique_id}.sam"
+        bwa-mem2 mem -t ${task.cpus} -R "@RG\\tID:${meta.unique_id}\\tSM:${meta.sample}" "${reference}" "\${fastqs[0]}" "\${fastqs[1]}" > "${meta.unique_id}.sam"
     fi
     """
 }

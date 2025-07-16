@@ -6,24 +6,28 @@
 
 
 process MAFTOOLS {
-    tag "${meta.id}"
+    tag "${caller}"
     publishDir "${params.OUTDIR}/analysis", mode: 'copy'
     // container "${params.R_CONTAINER}"
 
     input:
-    tuple val(meta), path(maf_dir)
+    tuple val(caller), path(maf_files)
     path(r_script)
 
     output:
-    tuple val(meta), path("${meta.caller}_recurrent_mutations.csv"), emit: csv
+    tuple val(caller), path("${caller}_recurrent_mutations.csv"), emit: csv
     path("*.png"), emit: csv2
     path("*.png"), emit: plots
 
     script:
     """
     set -euo pipefail
+    # Create maf directory and copy files there
+    mkdir -p maf_dir
+    cp ${maf_files} maf_dir/
+    ls -l maf_dir/
 
     # Run the R script with proper arguments
-    Rscript ${r_script} ${maf_dir} ${meta.id} ${meta.caller}
+    Rscript ${r_script} maf_dir ${caller}
     """
 }
