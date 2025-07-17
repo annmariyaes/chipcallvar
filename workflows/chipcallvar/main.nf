@@ -11,7 +11,7 @@ include { BAM_STATS; VCF_STATS }  from '../../workflows/chipcallvar/subworkflows
 include { VARIANT_ANNOTATION } from '../../workflows/chipcallvar/subworkflows/variant_annotation'
 include { VCF_POSTPROCESSING } from '../../workflows/chipcallvar/subworkflows/post_processing'
 include { VARIANT_FILTERING } from '../../workflows/chipcallvar/subworkflows/variant_filtering'
-include { DOWNSTREAM_ANALYSIS } from '../../workflows/chipcallvar/subworkflows/plots'
+include { DOWNSTREAM_ANALYSIS } from '../../workflows/chipcallvar/subworkflows/downstream_analysis'
 include { MULTIQC } from '../../modules/local/multiqc'
 
 
@@ -33,10 +33,10 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     BAM_STATS(ALIGN_AND_PROCESS.out.merged)
 
     ch_fai = Channel.fromPath(params.GENOME_FAI, checkIfExists: true)
-    PRE_PROCESSING(ch_reference, ch_fai)
+    PRE_PROCESSING(ALIGN_AND_PROCESS.out.merged, ch_reference, ch_fai)
 
-    PEAK_CALLING(ALIGN_AND_PROCESS.out.merged)
-    VARIANT_CALLING(ALIGN_AND_PROCESS.out.merged, PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index, PRE_PROCESSING.out.intervals, PRE_PROCESSING.out.dict)
+    PEAK_CALLING(PRE_PROCESSING.out.preprocessed)
+    VARIANT_CALLING(PRE_PROCESSING.out.preprocessed, PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index, PRE_PROCESSING.out.intervals, PRE_PROCESSING.out.dict)
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
     VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
 

@@ -4,8 +4,7 @@
 =============================================================================
 */
 
-
-process CREATE_SEQUENCE_DICTONARY {
+process GATK_CREATE_SEQUENCE_DICTONARY {
     container "${params.GATK_CONTAINER}"
 
     input:
