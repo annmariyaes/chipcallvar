@@ -15,7 +15,8 @@ process GATK_MARK_DUPLICATES {
     tuple val(meta), path(treat_bams), path(treat_bais)
 
     output:
-    tuple val(meta), path("${meta.sample}.dedup.bam"), path("${meta.sample}.dedup.bam.bai"), path("${meta.sample}.metrics.txt"), emit: duplicates_marked
+    tuple val(meta), path("${meta.sample}.dedup.bam"), path("${treat_bais}"), emit: duplicates_marked
+    path("${meta.sample}.metrics.txt"), emit: metrices
 
     script:
     """

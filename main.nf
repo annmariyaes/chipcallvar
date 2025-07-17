@@ -104,6 +104,8 @@ println """
 \033[1;36m  Germline database :\033[0m ${params.GNOMAD}
 \033[1;36m  Variant callers   :\033[0m ${params.tools}
 \033[1;36m  VEP Cache         :\033[0m ${params.VEP_CACHE}
+\033[1;36m  Starting step     :\033[0m ${params.STEP}
+\033[1;36m  Skipped tools     :\033[0m ${params.skip_tools}
 \033[1;34m=============================================================================================================================\033[0m
 """
 

@@ -22,7 +22,7 @@ The pipeline integrates the following tools:
 - Optional MAF conversion – `vcf2maf`, `maftools`
 - Quality control and reporting – `FastQC`, `Samtools`, `Mosdepth`, `bcftools`, `Ensembl VEP`, summarized with `MultiQC`
 
-![Workflow](./workflow.drawio.jpg)
+![Workflow](./workflow.png)
 
 
 To speed up variant calling, the reference genome is split into smaller **genomic intervals** using `bedtools`. Each interval is processed in parallel, and the resulting VCF files are merged. This significantly reduces the total wall-clock time and optimizes the use of compute resources.
@@ -37,7 +37,7 @@ Each row describes one replicate of a ChIP-seq experiment. The input format is:
 
 ```csv {samplesheet.csv}
 id,sample,replicate,fastq_1,fastq_2,control,control_replicate
-OCI-AML3,OCI-AML3_input,1,test/hs_ChIP_OCI-AML3_rep1_Input_R1_001.fastq.gztest/hs_ChIP_OCI-AML3_rep1_Input_R2_001.fastq.gz,,
+OCI-AML3,OCI-AML3_input,1,test/hs_ChIP_OCI-AML3_rep1_Input_R1_001.fastq.gz, test/hs_ChIP_OCI-AML3_rep1_Input_R2_001.fastq.gz,,
 OCI-AML3,OCI-AML3_H3K27ac,1,test/hs_ChIP_OCI-AML3_rep1_H3K27ac_R1_001.fastq.gz,test/hs_ChIP_OCI-AML3_rep1_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
 OCI-AML3,OCI-AML3_H3K27ac,2,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R1_001.fastq.gz,test/hs_ChIP_OCI-AML3_rep2_H3K27ac_R2_001.fastq.gz,OCI-AML3_input,1
 ```
@@ -60,7 +60,7 @@ tools: 'macs3,mutect2,freebayes'
 genome: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
 fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
 assembly: 'GRCh38'
-skip_tools: 'dge'
+skip_tools: 'dge,markduplicates,bqsr'
 tpm: './nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv'
 email: 'example@gmail.com'
 ```
