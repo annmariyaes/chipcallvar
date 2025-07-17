@@ -12,17 +12,19 @@ The pipeline integrates the following tools:
 
 ### Workflow Overview
 
-- Read alignment – `bwa-mem2`, `samtools`
-- Merging technical replicates – `samtools merge`
-- Interval creation – `bedtools`
-- Peak calling – `macs3 callpeak`
-- Variant calling – `macs3 callvar`, `GATK Mutect2`, `FreeBayes`
+- Read alignment – `bwa-mem2`, `SamTools`
+- Merging technical replicates – `SamTools merge`
+- Marking duplicate reads - `GATK MarkDuplicates`
+- Base Quality Scores Recalibration - `GATK BaseRecalibrator`, `GATK ApplyBQSR`
+- Interval creation – `BedTools`
+- Peak calling – `MAC3 CallPeak`
+- Variant calling – `MAC3 CallVar`, `GATK Mutect2`, `FreeBayes`
 - Variant annotation – `Ensembl VEP`
-- Filtering and reheadering – `bcftools`
+- Filtering and reheadering – `BcfTools`
 - Optional MAF conversion – `vcf2maf`, `maftools`
-- Quality control and reporting – `FastQC`, `Samtools`, `Mosdepth`, `bcftools`, `Ensembl VEP`, summarized with `MultiQC`
+- Quality control and reporting – `FastQC`, `SamTools`, `Mosdepth`, `BcfTools`, `Ensembl VEP`, summarized with `MultiQC`
 
-![Workflow](./workflow.png)
+![Workflow](./workflow.jpg)
 
 
 To speed up variant calling, the reference genome is split into smaller **genomic intervals** using `bedtools`. Each interval is processed in parallel, and the resulting VCF files are merged. This significantly reduces the total wall-clock time and optimizes the use of compute resources.
