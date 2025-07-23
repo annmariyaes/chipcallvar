@@ -84,19 +84,17 @@ workflow VARIANT_CALLING {
         
         // Create channel with chromosome-specific peaks and BAM files
         ch_chr_callvar = SPLIT_PEAKS_BY_CHR.out.chr_peaks
-            .transpose() // Split the list of chromosome files into separate entries
-            .map { meta, chr_peaks_file ->
-                // Extract chromosome name from filename
-                def chr = chr_peaks_file.name.replaceAll(/.*_chr(.+)\.bed/, '$1')
-                [meta.id, meta, chr, chr_peaks_file]
-            }
-            .join(ch_bams_keyed.map { id, meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
-                [id, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
-            })
-            .map { id, meta, chr, chr_peaks_file, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
-                [meta, chr, chr_peaks_file, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
-            }.view()
-        
+    .transpose()
+    .map { meta, chr_peaks_file ->
+        def chr = chr_peaks_file.name.replaceAll(/.*_chr(.+)\.bed/, '$1')
+        [meta.id, meta, chr, chr_peaks_file]
+    }
+    .combine(ch_bams_keyed.map { id, meta, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
+        [id, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
+    }, by: 0)  // Combine by first element (id)
+    .map { id, meta, chr, chr_peaks_file, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
+        [meta, chr, chr_peaks_file, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
+    }        
         // Run MACS3 CALLVAR for each chromosome
         MACS3_CALLVAR_CHR(ch_chr_callvar)
         

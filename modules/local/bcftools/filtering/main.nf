@@ -29,7 +29,7 @@ process BCFTOOLS {
     bcftools +fill-tags ${vcf} -Oz -o ${filled_vcf} -- -t FORMAT/VAF
     
     # Filter using split-vep with improved filter expression
-    bcftools +split-vep -i 'FORMAT/DP>=${params.DP} & FORMAT/VAF>=${params.VAF} & (gnomADe_AF<=${params.gnomADe_AF} | gnomADe_AF==".")' ${filled_vcf} -Oz -o ${filtered_vcf}
+    bcftools +split-vep -i 'FORMAT/DP>=${params.DP} & FORMAT/VAF>=${params.VAF} & (AF<=${params.AF} | AF==".") & (gnomADe_AF<=${params.gnomADe_AF} | gnomADe_AF==".")' ${filled_vcf} -Oz -o ${filtered_vcf}
     
     # Index the filtered VCF
     bcftools index -t ${filtered_vcf}
