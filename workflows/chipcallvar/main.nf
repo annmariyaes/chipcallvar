@@ -28,6 +28,7 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     main:
     QUALITY_CONTROL(ch_input)
     ch_reference = Channel.fromPath(params.REFERENCE_GENOME, checkIfExists: true)
+   
     PREPARE_GENOME(ch_reference)
     ALIGN_AND_PROCESS(ch_input, PREPARE_GENOME.out.index)
     BAM_STATS(ALIGN_AND_PROCESS.out.merged)
@@ -45,7 +46,6 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     ch_tpm = Channel.fromPath(params.tpm, checkIfExists: true)
     DOWNSTREAM_ANALYSIS(VARIANT_FILTERING.out.vcf, ch_tpm)
     
-    ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)    
     // Combine all channels first
     all_files = QUALITY_CONTROL.out.fastqc_zip
     	.mix(BAM_STATS.out.bam_stats1)
@@ -53,7 +53,8 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     	.mix(VCF_STATS.out.vcf_stats)
     	.mix(VARIANT_ANNOTATION.out.vep_stats)
     	.map { it[1] }
-    	.collect()
+    	.collect()    
+    ch_multiqc_config = Channel.fromPath("${workflow.projectDir}/multiqc_config.yaml", checkIfExists: true)
 
     MULTIQC(all_files, ch_multiqc_config)
 

@@ -23,8 +23,10 @@ workflow PRE_PROCESSING {
 
     if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates') && params.skip_tools.split(',').contains('bqsr'))) {
         GATK_MARK_DUPLICATES(ch_merged)
-        ch_dbsnp = Channel.fromPath(params.DBSNP, checkIfExists: true)
-        ch_dbindel = Channel.fromPath(params.MILLS_1000G, checkIfExists: true)
+        ch_dbsnp       = Channel.fromPath(params.DBSNP, checkIfExists: true)
+        ch_dbsnp_idx   = Channel.fromPath(params.DBSNP_TBI, checkIfExists: true)
+        ch_dbindel     = Channel.fromPath(params.MILLS_1000G, checkIfExists: true)
+        ch_dbindel_idx = Channel.fromPath(params.MILLS_1000G_TBI, checkIfExists: true)
         
         // Combine the channels properly for GATK_BQSR
         ch_bqsr = GATK_MARK_DUPLICATES.out.duplicates_marked
@@ -32,7 +34,9 @@ workflow PRE_PROCESSING {
                                       .combine(ch_fai)
                                       .combine(ch_dict)
                                       .combine(ch_dbsnp)
+                                      .combine(ch_dbsnp_idx)
                                       .combine(ch_dbindel)
+                                      .combine(ch_dbindel_idx)
         
         ch_bqsr_results = GATK_BQSR(ch_bqsr)
         ch_preprocessed = ch_bqsr_results.recalibrated

@@ -2,7 +2,7 @@
 
 
 
-process FILTER_PEAKS_BY_INTERVAL {
+process SPLIT_PEAKS_BY_INTERVAL {
     tag "${meta.id}_${interval_name}"
     publishDir "${params.OUTDIR}/preprocessing/intervals", mode: 'copy'
     container "${params.BEDTOOLS_CONTAINER}"

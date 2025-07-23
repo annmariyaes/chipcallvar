@@ -13,7 +13,7 @@ process GATK_BQSR {
     container "${params.GATK_CONTAINER}"
 
     input:
-    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path(fai), path(dict), path(dbsnp), path(dbindel)
+    tuple val(meta), path(treat_bams), path(treat_bais), path(reference), path(fai), path(dict), path(dbsnp), path(dbsnp_idx), path(dbindel), path(dbindel_idx)
 
     output:
     tuple val(meta), path("${meta.sample}.recal.bam"), path("${treat_bais}"), emit: recalibrated
@@ -24,15 +24,17 @@ process GATK_BQSR {
     """
     gatk BaseRecalibrator \
         -R "${reference}" \
-   	-I "${treat_bams}" \
-  	--known-sites "${dbsnp}" \
-  	--known-sites "${dbindel}" \
-  	-O "${meta.sample}.recal.table"
+	-I "${treat_bams}" \
+	--known-sites "${dbsnp}" \
+	--known-sites "${dbindel}" \
+        --sequence-dictionary "${dict}" \
+	-O "${meta.sample}.recal.table"
     
     gatk ApplyBQSR \
-  	-R "${reference}" \
-  	-I "${treat_bams}" \
-  	--bqsr-recal-file "${meta.sample}.recal.table" \
-  	-O "${meta.sample}.recal.bam"
+	-R "${reference}" \
+	-I "${treat_bams}" \
+        --sequence-dictionary "${dict}" \
+	--bqsr-recal-file "${meta.sample}.recal.table" \
+	-O "${meta.sample}.recal.bam"
     """
 }
