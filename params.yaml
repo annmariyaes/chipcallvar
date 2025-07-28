@@ -1,17 +1,17 @@
-OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-test/'
-SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/chipcallvar/example.csv'
+OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-subsampled/'
+SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/chipcallvar/samplesheet.csv'
 step: 'mapping'
 tools: 'macs3,mutect2,freebayes'
-skip_tools: 'dge,markduplicates,bqsr'
+# skip_tools: 'dge,markduplicates,bqsr'
 tpm: '/storage/projects/P034_RNAseq_AE/nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv'
 email: 'annmariya.elayani@gmail.com'
 no_intervals: false
-# depth: 10
+depth: 2
 # vaf: 0.1
 # af1: 0.0001
 # af2: 0.0001
-# genome: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
-# fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
+# fasta: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
+# fasta_fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
 # assembly: 'GRCh38'
 
 # SAMPLESHEET: "/storage/projects/P024_ChIPseq_AE/csv/samplesheet_merged.csv"

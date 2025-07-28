@@ -55,15 +55,20 @@ step can be 'mapping', 'annotate'
 
 
 ```yaml {params.yaml}
-OUTDIR: './results'
-SAMPLESHEET: './samplesheet_example.csv'
+outdir: './results'
+samplesheet: './samplesheet_example.csv'
 step: 'mapping'
 tools: 'macs3,mutect2,freebayes'
-genome: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
-fai: './reference/resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
-assembly: 'GRCh38'
 skip_tools: 'dge,markduplicates,bqsr'
 tpm: './nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv'
+no_intervals: false
+depth: 2
+vaf: 0.1
+af1: 0.0001
+af2: 0.0001
+fasta: './resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
+fasta_fai: './resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
+assembly: 'GRCh38'
 email: 'example@gmail.com'
 ```
 
