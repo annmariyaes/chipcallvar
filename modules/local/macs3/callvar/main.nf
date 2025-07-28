@@ -6,11 +6,13 @@
 
 
 
+// Without intervals
 process MACS3_CALLVAR {
     tag "${meta.id}"
     publishDir "${params.OUTDIR}/variant_calling/macs3/${meta.id}", mode: 'copy'
     container "${params.MACS3_CONTAINER}"
-    
+    label 'process_medium'
+
     input:
     tuple val(meta), path(peaks), path(treat_bams), path(treat_bais), path(ctrl_bams), path(ctrl_bais)
     
@@ -38,7 +40,7 @@ process MACS3_CALLVAR {
 
 // Run MACS3 callvar per chromosome
 process MACS3_CALLVAR_CHR {
-    tag "${meta.id}_${chr}"
+    tag "${meta.id}_chr${chr}"
     container "${params.MACS3_CONTAINER}"
     label 'process_medium'
     
@@ -51,7 +53,7 @@ process MACS3_CALLVAR_CHR {
     script:
     def ctrl_flag = ctrl_bams ? "--control ${ctrl_bams.join(' ')}" : ''
     def treat_files = treat_bams.join(' ')
-    def output_name = "${meta.id}_${chr}.macs3.vcf"
+    def output_name = "${meta.id}_chr${chr}.macs3.vcf"
     
     """
     # Check if BED file is not empty

@@ -20,7 +20,9 @@ process BCFTOOLS_CONCAT {
     tuple val(meta), path("${meta.id}.${caller}.merged.vcf.gz"), emit: vcf
     
     script:
-    def vcf_list = vcfs.join('\\n')
+
+    // Read file names from FILE, one file name per line
+    def vcf_list = vcfs.join('\n')
     """
     echo "${vcf_list}" > vcf_list.txt
     bcftools concat \

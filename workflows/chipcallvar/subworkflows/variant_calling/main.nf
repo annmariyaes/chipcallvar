@@ -109,9 +109,11 @@ workflow VARIANT_CALLING {
                 }, by: 0)  // Combine by first element (id)
                 .map { id, meta, chr, chr_peaks_file, treat_bams, treat_bais, ctrl_bams, ctrl_bais ->
                     [meta, chr, chr_peaks_file, treat_bams, treat_bais, ctrl_bams, ctrl_bais]
-            }
+                }
+          
             // Run MACS3 CALLVAR for each chromosome
             MACS3_CALLVAR_CHR(ch_chr_callvar)
+
             // Group VCF files by sample for concatenation
             ch_macs3_grouped = MACS3_CALLVAR_CHR.out.vcf
                 .groupTuple(by: 0) // Group by meta
@@ -123,11 +125,14 @@ workflow VARIANT_CALLING {
                         // Handle numeric vs non-numeric chromosome names
                         if (chr_a.isNumber() && chr_b.isNumber()) {
                             return chr_a.toInteger() <=> chr_b.toInteger()
-                        } else if (chr_a.isNumber() && !chr_b.isNumber()) {
+                        }
+                        else if (chr_a.isNumber() && !chr_b.isNumber()) {
                             return -1
-                        } else if (!chr_a.isNumber() && chr_b.isNumber()) {
+                        } 
+                        else if (!chr_a.isNumber() && chr_b.isNumber()) {
                             return 1
-                        } else {
+                        } 
+                        else {
                             return chr_a <=> chr_b
                         }
                     }

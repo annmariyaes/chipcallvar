@@ -1,10 +1,11 @@
-OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-full-temp/'
-SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/chipcallvar/samplesheet_full_temp.csv'
+OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-test/'
+SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/chipcallvar/example.csv'
 step: 'mapping'
-tools: 'macs3'
+tools: 'macs3,mutect2,freebayes'
 skip_tools: 'dge,markduplicates,bqsr'
 tpm: '/storage/projects/P034_RNAseq_AE/nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv'
 email: 'annmariya.elayani@gmail.com'
+no_intervals: false
 # depth: 10
 # vaf: 0.1
 # af1: 0.0001
