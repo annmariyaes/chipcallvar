@@ -2,7 +2,7 @@ OUTDIR: '/storage/projects/P024_ChIPseq_AE/nf-subsampled/'
 SAMPLESHEET: '/storage/projects/P024_ChIPseq_AE/chipcallvar/samplesheet.csv'
 step: 'mapping'
 tools: 'macs3,mutect2,freebayes'
-# skip_tools: 'dge,markduplicates,bqsr'
+skip_tools: 'dge,markduplicates,bqsr'
 tpm: '/storage/projects/P034_RNAseq_AE/nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv'
 email: 'annmariya.elayani@gmail.com'
 no_intervals: false
