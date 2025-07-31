@@ -7,7 +7,7 @@
 
 process VCF2MAF {
     tag "${meta.id}"
-    publishDir "${params.OUTDIR}/mafs_annotated/${meta.caller}/${meta.id}", mode: 'copy'
+    publishDir "${params.OUTDIR}/post_processing/mafs_annotated/${meta.caller}/${meta.id}", mode: 'copy'
     container "${params.VCF2MAF_CONTAINER}"
 
     input:

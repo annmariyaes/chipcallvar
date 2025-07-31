@@ -7,7 +7,6 @@
 
 include { GATK_MARK_DUPLICATES } from '../../../../modules/local/gatk/markduplicates'
 include { GATK_BQSR } from '../../../../modules/local/gatk/bqsr'
-include { CREATE_INTERVALS_BED } from '../../../../modules/local/bedtools/makewindows'
 include { GATK_CREATE_SEQUENCE_DICTONARY } from '../../../../modules/local/gatk/createsequencedictionary'
 
 workflow PRE_PROCESSING {
@@ -18,7 +17,6 @@ workflow PRE_PROCESSING {
     
     main:
 
-    ch_chunks = CREATE_INTERVALS_BED(ch_fai)
     ch_dict = GATK_CREATE_SEQUENCE_DICTONARY(ch_reference)
 
     if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates') && params.skip_tools.split(',').contains('bqsr'))) {
@@ -50,6 +48,5 @@ workflow PRE_PROCESSING {
     emit:
     table = ch_recal_table
     preprocessed = ch_preprocessed
-    intervals = ch_chunks.intervals
     dict = ch_dict.dict
 }

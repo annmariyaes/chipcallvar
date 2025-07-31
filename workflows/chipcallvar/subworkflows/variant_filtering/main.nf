@@ -15,6 +15,7 @@ workflow VARIANT_FILTERING {
 
     main:
     ch_vcf = Channel.empty()
+    ch_vcf_tbi = Channel.empty()
 
     // Branch the channel by caller using the meta.caller field
     ch_vep.branch {
@@ -27,18 +28,22 @@ workflow VARIANT_FILTERING {
     if (params.tools && params.tools.split(',').contains('macs3')) {
         vep_macs3 = BCFTOOLS_MACS3(ch_branched.macs3, 'macs3')
         ch_vcf = ch_vcf.mix(vep_macs3.vcf)
+        ch_vcf_tbi = ch_vcf.mix(vep_macs3.vcf_tbi)
     }
 
     if (params.tools && params.tools.split(',').contains('mutect2')) {
         vep_mutect2 = BCFTOOLS_MUTECT2(ch_branched.mutect2, 'mutect2')
         ch_vcf = ch_vcf.mix(vep_mutect2.vcf)
+        ch_vcf_tbi = ch_vcf.mix(vep_mutect2.vcf_tbi)
     }
 
     if (params.tools && params.tools.split(',').contains('freebayes')) {
         vep_freebayes = BCFTOOLS_FREEBAYES(ch_branched.freebayes, 'freebayes')
         ch_vcf = ch_vcf.mix(vep_freebayes.vcf)
+        ch_vcf_tbi = ch_vcf_tbi.mix(vep_freebayes.vcf_tbi)
     }
-
+        
     emit:
-    vcf = ch_vcf         
+    vcf = ch_vcf
+    vcf_tbi = ch_vcf_tbi         
 }

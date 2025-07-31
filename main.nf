@@ -102,21 +102,21 @@ println """
 \033[1;36m  Variant callers   :\033[0m ${params.tools}
 \033[1;36m  Skipped tools     :\033[0m ${params.skip_tools}
 
-\033[1;34m  Reference genome:
+\033[1;34m  Reference genome
 \033[1;36m  Genome Assembly   :\033[0m ${params.ASSEMBLY}
 \033[1;36m  Fasta             :\033[0m ${params.REFERENCE_GENOME}
 \033[1;36m  Fasta index       :\033[0m ${params.GENOME_FAI}
 
-\033[1;34m  Variant annotation database:
+\033[1;34m  Variant annotation database
 \033[1;36m  VEP Cache         :\033[0m ${params.VEP_CACHE}
 
-\033[1;34m  Population databases:
+\033[1;34m  Population databases
 \033[1;36m  Panel of Normals  :\033[0m ${params.PON}
 \033[1;36m  Germline database :\033[0m ${params.GNOMAD}
 \033[1;36m  SNVs database   :\033[0m ${params.DBSNP}
 \033[1;36m  INDELs database   :\033[0m ${params.MILLS_1000G}    
 
-\033[1;34m  Variant Filtering params:
+\033[1;34m  Variant Filtering params
 \033[1;36m  Depth            :\033[0m ${params.DP}
 \033[1;36m  AF (1000 genome) :\033[0m ${params.AF}
 \033[1;36m  AF (gnomAD)      :\033[0m ${params.gnomADe_AF}

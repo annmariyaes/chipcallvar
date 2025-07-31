@@ -57,18 +57,22 @@ step can be 'mapping', 'annotate'
 ```yaml {params.yaml}
 outdir: './results'
 samplesheet: './samplesheet_example.csv'
-step: 'mapping'
-tools: 'macs3,mutect2,freebayes'
-skip_tools: 'dge,markduplicates,bqsr'
-tpm: './nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv'
-no_intervals: false
-depth: 2
-vaf: 0.1
-af1: 0.0001
-af2: 0.0001
+# reference genome
 fasta: './resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta'
 fasta_fai: './resources-broad-hg38-v0-Homo_sapiens_assembly38.fasta.fai'
 assembly: 'GRCh38'
+step: 'mapping'
+tools: 'macs3,mutect2,freebayes'
+skip_tools: 'dge,markduplicates,bqsr'
+no_intervals: TRUE
+merge_vcfs: TRUE
+# variant filtering
+depth: 10
+vaf: 0.1
+af1: 0.0001
+af2: 0.0001
+# for DGE analysis
+tpm: './nf-rnaseq/star_rsem/rsem.merged.gene_tpm.tsv'
 email: 'example@gmail.com'
 ```
 

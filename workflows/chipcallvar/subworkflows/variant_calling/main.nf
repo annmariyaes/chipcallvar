@@ -20,7 +20,6 @@ workflow VARIANT_CALLING {
     ch_bam
     ch_peaks
     ch_index
-    ch_interval
     ch_dict
 
     main:

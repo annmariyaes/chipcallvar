@@ -9,29 +9,28 @@ https://samtools.github.io/bcftools/bcftools.html#merge
 
 
 process BCFTOOLS_MERGING {
-    tag "${meta.id}"
-    publishDir "${params.OUTDIR}/annotation/ensembl_vep/${meta.id}", mode: 'copy'
+    tag "${meta.sample}"
+    publishDir "${params.OUTDIR}/post_processing/merged/${meta.sample}", mode: 'copy'
+    container "${params.BCFTOOLS_CONTAINER}"
 
     input:
-    tuple val(meta), path(vcf)
+    tuple val(meta), path(vcfs), path(vcfs_tbi)
 
     output:
-    tuple val(meta), path("${meta.id}.filtered.vcf.gz"), emit: vcf
-    tuple val(meta), path("${meta.id}.filtered.vcf.gz.tbi"), emit: vcf_tbi
+    tuple val(meta), path("${meta.sample}.merged.vcf.gz"), emit: vcf
+    tuple val(meta), path("${meta.sample}.merged.vcf.gz.tbi"), emit: vcf_tbi
 
     script:
+    def vcf_list = vcfs.collect { it.getName() }.join(' ')
+
     """
-    # Step 1: Fill FORMAT/VAF tag
-    bcftools +fill-tags ${vcf} -Oz -o ${meta.id}_filled.vcf.gz -- -t FORMAT/VAF
-
-    # Step 2: Filter using split-vep
-    bcftools +split-vep -i 'INFO/DP>=${params.DP} & FORMAT/VAF>=${params.VAF} & (gnomADe_AF<=${params.gnomADe_AF} | gnomADe_AF==".")' \
-                        ${meta.id}_filled.vcf.gz -Oz -o ${meta.id}.{meta.caller}.filtered.vcf.gz
-
-    # Step 3: Index the filtered VCF
-    bcftools index ${meta.id}.{meta.caller}.filtered.vcf.gz
-
-    # Step 4: Remove the intermediate filled vcf file
-    rm "${meta.id}_filled.vcf.gz"
+    bcftools merge \\
+        --force-samples \\
+        --merge all \\
+        --output-type z \\
+        --output "${meta.sample}.merged.vcf.gz" \\
+        ${vcf_list}
+    
+    tabix -f -p vcf "${meta.sample}.merged.vcf.gz"
     """
 }

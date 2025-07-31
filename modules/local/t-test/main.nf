@@ -8,7 +8,7 @@
 
 process TTEST {
     tag "${meta.id}"
-    publishDir "${params.OUTDIR}/analysis", mode: 'copy'
+    publishDir "${params.OUTDIR}/post_processing/dge_analysis", mode: 'copy'
     container "${params.R_CONTAINER}"
     // label 'process_RScript'
   

@@ -7,7 +7,7 @@
 
 process MAFTOOLS {
     tag "${caller}"
-    publishDir "${params.OUTDIR}/analysis", mode: 'copy'
+    publishDir "${params.OUTDIR}/post_processing/t_test", mode: 'copy'
     // container "${params.R_CONTAINER}"
 
     input:

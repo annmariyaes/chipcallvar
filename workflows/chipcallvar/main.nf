@@ -11,6 +11,7 @@ include { BAM_STATS; VCF_STATS }  from '../../workflows/chipcallvar/subworkflows
 include { VARIANT_ANNOTATION } from '../../workflows/chipcallvar/subworkflows/variant_annotation'
 include { VCF_POSTPROCESSING } from '../../workflows/chipcallvar/subworkflows/post_processing'
 include { VARIANT_FILTERING } from '../../workflows/chipcallvar/subworkflows/variant_filtering'
+include { CONSENSUS_CALLING } from '../../workflows/chipcallvar/subworkflows/variant_merging'
 include { DOWNSTREAM_ANALYSIS } from '../../workflows/chipcallvar/subworkflows/downstream_analysis'
 include { MULTIQC } from '../../modules/local/multiqc'
 
@@ -37,11 +38,12 @@ workflow CHIP_SEQ_FASTQ_VARIANT_CALLING {
     PRE_PROCESSING(ALIGN_AND_PROCESS.out.merged, ch_reference, ch_fai)
 
     PEAK_CALLING(PRE_PROCESSING.out.preprocessed)
-    VARIANT_CALLING(PRE_PROCESSING.out.preprocessed, PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index, PRE_PROCESSING.out.intervals, PRE_PROCESSING.out.dict)
+    VARIANT_CALLING(PRE_PROCESSING.out.preprocessed, PEAK_CALLING.out.peaks, PREPARE_GENOME.out.index, PRE_PROCESSING.out.dict)
     VARIANT_ANNOTATION(VARIANT_CALLING.out.vcf)
     VARIANT_FILTERING(VARIANT_ANNOTATION.out.vcf)
-
+     
     VCF_STATS(VARIANT_FILTERING.out.vcf)
+    CONSENSUS_CALLING(VARIANT_FILTERING.out.vcf, VARIANT_FILTERING.out.vcf_tbi)
 
     ch_tpm = Channel.fromPath(params.tpm, checkIfExists: true)
     DOWNSTREAM_ANALYSIS(VARIANT_FILTERING.out.vcf, ch_tpm)
