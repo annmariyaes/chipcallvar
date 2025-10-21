@@ -7,21 +7,21 @@ on:
     branches: [ "main" ]
 
 jobs:
-  run-r-env:
+  run-r-scripts:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Miniconda
+      - name: Set up Miniconda with Mamba
         uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: environment.yml
           activate-environment: r_env
           auto-update-conda: true
-          python-version: 3.10  
-          use-mamba: true   
+          python-version: 3.10
+          use-mamba: true
 
       - name: Verify R environment
         shell: bash -l {0}
@@ -30,8 +30,16 @@ jobs:
           conda list
           R --version
 
-      - name: Run R analysis scripts
+      - name: Run all R scripts
         shell: bash -l {0}
         run: |
-          echo "Running R scripts..."
-          Rscript bin/differential_expression_analysis.R
+          for f in scripts/*.R; do
+            echo "Running $f"
+            Rscript "$f"
+          done
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: r-results
+          path: results/
