@@ -9,37 +9,44 @@ on:
 jobs:
   run-r-scripts:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      
       - name: Set up Miniconda with Mamba
         uses: conda-incubator/setup-miniconda@v3
         with:
-          environment-file: environment.yml
+          environment-file: r_env.yml
           activate-environment: r_env
           auto-update-conda: true
-          python-version: 3.10
+          python-version: "3.10"
           use-mamba: true
-
+          channel-priority: strict
+      
       - name: Verify R environment
         shell: bash -l {0}
         run: |
           conda info
           conda list
           R --version
-
+      
+      - name: Create results directory
+        shell: bash -l {0}
+        run: mkdir -p results
+      
       - name: Run all R scripts
         shell: bash -l {0}
         run: |
           for f in scripts/*.R; do
-            echo "Running $f"
-            Rscript "$f"
+            if [ -f "$f" ]; then
+              echo "Running $f"
+              Rscript "$f"
+            fi
           done
-
+      
       - name: Upload results
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: r-results
           path: results/
