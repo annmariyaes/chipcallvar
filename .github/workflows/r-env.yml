@@ -17,7 +17,7 @@ jobs:
       - name: Set up Miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
-          environment-file: r_env.yml
+          environment-file: environment.yml
           activate-environment: r_env
           auto-update-conda: true
           python-version: 3.10  # safe default, even though R is the focus
