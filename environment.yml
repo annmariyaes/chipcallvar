@@ -13,7 +13,6 @@ dependencies:
   - r-rcolorbrewer
   - r-coin
   - r-cairo
-  - r-stats
   - r-readr
   - r-tidyr
   - r-r.utils
