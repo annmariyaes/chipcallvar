@@ -1,52 +1,41 @@
-name: R Environment Workflow
+name: R CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  run-r-scripts:
-    runs-on: ubuntu-latest
+  build-test:
+    runs-on: ubuntu-latest  # GitHub-hosted Linux runner
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Set up Miniconda with Mamba
+
+      - name: Set up Miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
-          miniforge-version: latest
-          environment-file: environment.yml
+          auto-update-conda: true
           activate-environment: r_env
-          python-version: "3.11"
-          use-mamba: true
-          mamba-version: "*"
-          channels: conda-forge,bioconda,defaults
-      
-      - name: Display conda info
+          environment-file: r_env.yaml
+          python-version: 3.14
+          channel-priority: strict
+          auto-activate-base: false
+
+      - name: Verify environment
         shell: bash -l {0}
         run: |
           conda info
-          conda config --show channels
-          mamba --version
-      
-      - name: Verify R environment
-        shell: bash -l {0}
-        run: |
           conda list
-          which R
           R --version
-      
-      - name: Create results directory
-        shell: bash -l {0}
-        run: mkdir -p results
+          Rscript -e 'sessionInfo()'
       
       - name: Run all R scripts
         shell: bash -l {0}
         run: |
-          if [ -d "scripts" ]; then
-            for f in scripts/*.R; do
+          if [ -d "bin" ]; then
+            for f in bin/*.R; do
               if [ -f "$f" ]; then
                 echo "Running $f"
                 Rscript "$f" || echo "Warning: $f failed"
@@ -55,19 +44,3 @@ jobs:
           else
             echo "No scripts directory found"
           fi
-      
-      - name: Upload results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: r-results
-          path: results/
-          if-no-files-found: warn
-
-      - name: Debug conda environment creation
-        if: failure()
-        shell: bash -l {0}
-        run: |
-          cat /home/runner/.condarc
-          conda config --show
-          mamba env create -f environment.yml -v -v -v
